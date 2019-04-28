@@ -40,7 +40,7 @@ void draw_text(const int arr[MAX_ROW + 2][MAX_COL + 2], const int row, const int
 	draw_ball_text(arr, row, col, x_position + 3, y_position + 2, color);
 }
 
-void draw_edge_img_no_div(const int row, const int col, const int x_position, const int y_position)
+void draw_edge_img_no_div(const int row, const int col, const int x_position, const int y_position, const int is_disp_ch)
 {
 	int i;
 	showstr(x_position + 2, 1 + y_position, "¨X", COLOR_HWHITE, COLOR_HBLACK);
@@ -53,10 +53,12 @@ void draw_edge_img_no_div(const int row, const int col, const int x_position, co
 	showstr(x_position + 2, 1 + y_position + row + 1, "¨^", COLOR_HWHITE, COLOR_HBLACK);
 	showstr(x_position + 4, 1 + y_position + row + 1, "¨T", COLOR_HWHITE, COLOR_HBLACK, col);
 	showstr(x_position + 2 * (col + 1) + 2, 1 + y_position + row + 1, "¨a", COLOR_HWHITE, COLOR_HBLACK);
-	for (i = 1; i <= row; i++)
-		showch(x_position, y_position + 1 + i, 'A' + i - 1);
-	for (i = 1; i <= col; i++)
-		showch(x_position + 3 + 2 * i, y_position, '0' + i);
+	if (is_disp_ch) {
+		for (i = 1; i <= row; i++)
+			showch(x_position, y_position + 1 + i, 'A' + i - 1);
+		for (i = 1; i <= col; i++)
+			showch(x_position + 3 + 2 * i, y_position, '0' + i);
+	}
 }
 
 void draw_ball_img_no_div(const int arr[MAX_ROW + 2][MAX_COL + 2], const int row, const int col, const int x_position, const int y_position)
@@ -70,9 +72,9 @@ void draw_ball_img_no_div(const int arr[MAX_ROW + 2][MAX_COL + 2], const int row
 		}
 }
 
-void draw_img_no_div(const int arr[MAX_ROW + 2][MAX_COL + 2], const int row, const int col, const int x_position, const int y_position)
+void draw_img_no_div(const int arr[MAX_ROW + 2][MAX_COL + 2], const int row, const int col, const int x_position, const int y_position, const int is_disp_ch)
 {
-	draw_edge_img_no_div(row, col, x_position, y_position);
+	draw_edge_img_no_div(row, col, x_position, y_position, is_disp_ch);
 	draw_ball_img_no_div(arr, row, col, x_position, y_position);
 }
 

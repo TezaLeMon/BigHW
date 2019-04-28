@@ -1,19 +1,16 @@
-/* 学号 姓名 班级 */
+// 1752762 计1班 魏鹳达
 #include <iostream>
 #include "../common/cmd_console_tools.h"
+#include "../common/cmd_hdc_tools.h"
+#include "90-b3.h"
 using namespace std;
 
 int main()
 {
-	const int x = 123456789;
-
-	//重复显示3次整数123456789
-	showint(5, 10, x, COLOR_BLACK, COLOR_WHITE, 3);
-	showstr(5, 11, "90-b3");
-
-	//恢复初始颜色
-	setcolor();
-	cout << endl << endl;
-
+	setconsoleborder(80, 25, 80, 1000);
+	setfontsize("Terminal", 16, 8);
+	char **list = NULL;
+	read_book_list(&list, "./book");
+	disp_booklist(&list, 3, 3, 10, 10);
 	return 0;
 }

@@ -24,12 +24,27 @@
     <ClCompile Include="..\common\cmd_hdc_tools.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="90-b3-base.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="90-b3-console.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\common_graphics.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common\cmd_console_tools.h">
       <Filter>头文件</Filter>
     </ClInclude>
     <ClInclude Include="..\common\cmd_hdc_tools.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="90-b3.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\common_graphics.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
