@@ -5,7 +5,7 @@
 void draw_text(const int arr[MAX_ROW + 2][MAX_COL + 2], const int row, const int col, const int x_position, const int y_position, const int color = 1);
 
 //图形 绘制边框（无分隔线）
-void draw_edge_img_no_div(const int row, const int col, const int x_position, const int y_position, const int is_disp_ch = 0);
+void draw_edge_img_no_div(const int row, const int col, const int x_position, const int y_position, const int is_disp_ch = 0, const int bg_color = COLOR_HWHITE, const int fg_color = COLOR_HBLACK);
 //图形 绘制边框及彩球（无分隔线）
 void draw_img_no_div(const int arr[MAX_ROW + 2][MAX_COL + 2], const int row, const int col, const int x_position, const int y_position, const int is_disp_ch = 1);
 //图形 绘制边框及彩球（有分隔线）

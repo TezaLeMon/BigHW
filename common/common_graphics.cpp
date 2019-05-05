@@ -40,19 +40,19 @@ void draw_text(const int arr[MAX_ROW + 2][MAX_COL + 2], const int row, const int
 	draw_ball_text(arr, row, col, x_position + 3, y_position + 2, color);
 }
 
-void draw_edge_img_no_div(const int row, const int col, const int x_position, const int y_position, const int is_disp_ch)
+void draw_edge_img_no_div(const int row, const int col, const int x_position, const int y_position, const int is_disp_ch, const int bg_color, const int fg_color)
 {
 	int i;
-	showstr(x_position + 2, 1 + y_position, "¨X", COLOR_HWHITE, COLOR_HBLACK);
-	showstr(x_position + 4, 1 + y_position, "¨T", COLOR_HWHITE, COLOR_HBLACK, col);
-	showstr(x_position + 2 * (col + 1) + 2, 1 + y_position, "¨[", COLOR_HWHITE, COLOR_HBLACK);
+	showstr(x_position + 2, 1 + y_position, "¨X", bg_color, fg_color);
+	showstr(x_position + 4, 1 + y_position, "¨T", bg_color, fg_color, col);
+	showstr(x_position + 2 * (col + 1) + 2, 1 + y_position, "¨[", bg_color, fg_color);
 	for (i = 1; i <= row; i++) {
-		showstr(x_position + 2, 1 + y_position + i, "¨U", COLOR_HWHITE, COLOR_HBLACK);
-		showstr(x_position + 2 * (col + 1) + 2, 1 + y_position + i, "¨U", COLOR_HWHITE, COLOR_HBLACK);
+		showstr(x_position + 2, 1 + y_position + i, "¨U", bg_color, fg_color);
+		showstr(x_position + 2 * (col + 1) + 2, 1 + y_position + i, "¨U", bg_color, fg_color);
 	}
-	showstr(x_position + 2, 1 + y_position + row + 1, "¨^", COLOR_HWHITE, COLOR_HBLACK);
-	showstr(x_position + 4, 1 + y_position + row + 1, "¨T", COLOR_HWHITE, COLOR_HBLACK, col);
-	showstr(x_position + 2 * (col + 1) + 2, 1 + y_position + row + 1, "¨a", COLOR_HWHITE, COLOR_HBLACK);
+	showstr(x_position + 2, 1 + y_position + row + 1, "¨^", bg_color, fg_color);
+	showstr(x_position + 4, 1 + y_position + row + 1, "¨T", bg_color, fg_color, col);
+	showstr(x_position + 2 * (col + 1) + 2, 1 + y_position + row + 1, "¨a", bg_color, fg_color);
 	if (is_disp_ch) {
 		for (i = 1; i <= row; i++)
 			showch(x_position, y_position + 1 + i, 'A' + i - 1);
