@@ -15,15 +15,21 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="90-b4-main.cpp">
+    <ClCompile Include="..\common\cmd_console_tools.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="..\common\cmd_console_tools.cpp">
+    <ClCompile Include="90-b4-test_gmw.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="..\common\cmd_gmw_tools.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\common\cmd_console_tools.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="..\common\cmd_gmw_tools.h">
       <Filter>头文件</Filter>
     </ClInclude>
   </ItemGroup>
