@@ -35,6 +35,11 @@ using namespace std;
 ***************************************************************************/
 int gmw_set_rowcol(CONSOLE_GRAPHICS_INFO *const pCGI, const int row, const int col)
 {
+	int rw, cl;
+	rw = row > 0 ? row : 0;
+	cl = col > 0 ? col : 0;
+
+
 	return 0; //此句可根据需要修改
 }
 

@@ -61,15 +61,15 @@ typedef struct _console_frame_info_ {
 	╚ ═ ╧ ═ ╝ */
 	char top_left[CFI_LEN];			// "╔"
 	char lower_left[CFI_LEN];		// "╚"
-	char top_right[CFI_LEN];			// "╗"
+	char top_right[CFI_LEN];		// "╗"
 	char lower_right[CFI_LEN];		// "╝"
 	char h_normal[CFI_LEN];			// "═"	//Horizontal
 	char v_normal[CFI_LEN];			// "║"	//Vertical
 	char h_top_separator[CFI_LEN];	// "╤"
-	char h_lower_separator[CFI_LEN];	// "╧"
+	char h_lower_separator[CFI_LEN];// "╧"
 	char v_left_separator[CFI_LEN];	// "╟"
-	char v_right_separator[CFI_LEN];	// "╢"
-	char mid_separator[CFI_LEN];		// "┼"
+	char v_right_separator[CFI_LEN];// "╢"
+	char mid_separator[CFI_LEN];	// "┼"
 
 	/* 游戏主框架区域的背景色和前景色 */
 	int bgcolor;
@@ -100,7 +100,7 @@ typedef struct _console_block_info_ {
 	╚ ═ ╝ */
 	char top_left[CBI_LEN];			// "╔"
 	char lower_left[CBI_LEN];		// "╚"
-	char top_right[CBI_LEN];			// "╗"
+	char top_right[CBI_LEN];		// "╗"
 	char lower_right[CBI_LEN];		// "╝"
 	char h_normal[CBI_LEN];			// "═"	//Horizontal
 	char v_normal[CBI_LEN];			// "║"	//Vertical
@@ -182,7 +182,7 @@ typedef struct _console_graphics_info_ {
 	/* 延时时间设置 */
 	int delay_of_draw_frame;		//画外框是的延时
 	int delay_of_draw_block;		//画游戏块的延时
-	int delay_of_block_moved;	//游戏块移动的延时
+	int delay_of_block_moved;		//游戏块移动的延时
 
 	/* 【下面允许添加你认为需要的值，这些值不能通过设置函数直接设置】 */
 	/* 整个图形界面的主框架区域的参考坐标起始位置(左上角）
