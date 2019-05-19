@@ -414,12 +414,12 @@ int gmw_draw_frame(const CONSOLE_GRAPHICS_INFO *const pCGI)
 	int i, j;
 	for (i = 0; i < pCGI->row_num; i++) {
 		for (j = 0; j < pCGI->col_num; j++) {
-
+			
 		}
 	}
 	return 0; //此句可根据需要修改
 }
-
+ 
 /***************************************************************************
   函数名称：
   功    能：在状态栏上显示信息
