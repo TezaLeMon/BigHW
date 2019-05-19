@@ -16,6 +16,8 @@ typedef struct _status_line_info_ {
 	bool is_top_status_line;
 	bool is_lower_status_line;
 
+	char pad1[2];	//填充字节，为了凑齐4字节
+
 	/* 上状态栏的位置 */
 	int top_start_x;
 	int top_start_y;
@@ -40,9 +42,19 @@ typedef struct _status_line_info_ {
 	int lower_catchy_bgcolor;
 	int lower_catchy_fgcolor;
 
-	/* 【下面允许添加你认为需要的值，这些值不能通过设置函数直接设置（例：根据各种信息算出状态栏的宽度，用于控制在显示状态栏信息时不要超过指定宽度）】 */
+	/* 【下面这个值是 cmd_tgmw_tools.lib 需要用到的结构体成员，这个值是内部计算得到的，不是直接设置值，
+         可以不用，但是不准删除，否则cmd_tgmw_tools.lib中的函数调用时可能出错】 */
 
+	/* 状态栏所占的宽度（该值由计算得到，是游戏区域的宽度，不包括扩展区域，信息超过宽度则截断） */	
+	int width;
 
+	/* 【下面允许添加你认为需要的值，这些值不能通过设置函数直接设置（例：根据各种信息算出状态栏的宽度，用于控制在显示状态栏信息时不要超过指定宽度）
+         因为引入了 cmd_tgmw_tools.lib，为了保持两者的结构体一致，设置这部分大小为64字节（目前是pad），
+         如果需要添加相应内容，请保持添加内容+填充字节=64字节，
+           例如：int data1;
+                 int data2;
+                 char pad[56]; 】 */
+	char pad[64];
 } STATUS_LINE_INFO;
 
 /* 存储游戏主框架边框信息的字符数组的长度（含尾零）
@@ -61,15 +73,17 @@ typedef struct _console_frame_info_ {
 	╚ ═ ╧ ═ ╝ */
 	char top_left[CFI_LEN];			// "╔"
 	char lower_left[CFI_LEN];		// "╚"
-	char top_right[CFI_LEN];		// "╗"
+	char top_right[CFI_LEN];			// "╗"
 	char lower_right[CFI_LEN];		// "╝"
 	char h_normal[CFI_LEN];			// "═"	//Horizontal
 	char v_normal[CFI_LEN];			// "║"	//Vertical
 	char h_top_separator[CFI_LEN];	// "╤"
-	char h_lower_separator[CFI_LEN];// "╧"
+	char h_lower_separator[CFI_LEN];	// "╧"
 	char v_left_separator[CFI_LEN];	// "╟"
-	char v_right_separator[CFI_LEN];// "╢"
-	char mid_separator[CFI_LEN];	// "┼"
+	char v_right_separator[CFI_LEN];	// "╢"
+	char mid_separator[CFI_LEN];		// "┼"
+
+	char pad1[3];	//填充字节，为了凑齐36字节
 
 	/* 游戏主框架区域的背景色和前景色 */
 	int bgcolor;
@@ -81,8 +95,25 @@ typedef struct _console_frame_info_ {
 
 	/* 色块之间是否需要分隔线 */
 	bool separator;
+	char pad2[3];	//填充字节，为了凑齐56字节
 
-	/* 【下面允许添加你认为需要的值，这些值不能通过设置函数直接设置】 */
+	/* 【下面这几个值是cmd_tgmw_tools.lib需要用到的结构体成员，这些值都是内部计算得到的，不是直接设置值，
+         可以不用，但是不准删除，否则cmd_tgmw_tools.lib中的函数调用时可能出错】 */
+	/* 每个色块的附加的宽度和高度(有分隔线是分别为2/1)，由separator计算而来 */
+	int block_width_ext;
+	int block_high_ext;
+
+	/* 每行/每列含分隔线的总宽度，由宽度/高度+分隔线计算而来 */
+	int bwidth;
+	int bhigh;
+
+	/* 【下面允许添加你认为需要的值，这些值不能通过设置函数直接设置，只是为了方便程序中调用(不需要每次重复计算)
+         因为引入了 cmd_tgmw_tools.lib，为了保持两者的结构体一致，设置这部分大小为64字节（目前是pad），
+         如果需要添加相应内容，请保持添加内容+填充字节=64字节，
+           例如：int data1;
+                 int data2;
+                 char pad[56]; 】 */
+	char pad[64];
 
 } CONSOLE_FRAME_INFO;
 
@@ -100,14 +131,21 @@ typedef struct _console_block_info_ {
 	╚ ═ ╝ */
 	char top_left[CBI_LEN];			// "╔"
 	char lower_left[CBI_LEN];		// "╚"
-	char top_right[CBI_LEN];		// "╗"
+	char top_right[CBI_LEN];			// "╗"
 	char lower_right[CBI_LEN];		// "╝"
 	char h_normal[CBI_LEN];			// "═"	//Horizontal
 	char v_normal[CBI_LEN];			// "║"	//Vertical
 
 	bool block_border;				//色块是否需要边框
+	bool pad1;						//填充字节，为了凑齐20字节
 
-	/* 【下面允许添加你认为需要的值，这些值不能通过设置函数直接设置】 */
+	/* 【下面允许添加你认为需要的值，这些值不能通过设置函数直接设置，只是为了方便程序中调用(不需要每次重复计算)
+		 因为引入了 cmd_tgmw_tools.lib，为了保持两者的结构体一致，设置这部分大小为64字节（目前是pad），
+		 如果需要添加相应内容，请保持添加内容+填充字节=64字节，
+		   例如：int data1;
+				 int data2;
+				 char pad[56]; 】 */
+	char pad[64];
 
 } CONSOLE_BLOCK_INFO;
 
@@ -144,16 +182,16 @@ typedef struct _console_graphics_info_ {
 	/* 【下面定义的是可通过设置函数改变的值，不准修改成员名】 */
 
 	/* 主框架信息 */
-	CONSOLE_FRAME_INFO CFI;
+	CONSOLE_FRAME_INFO CFI;		//136字节
 
 	/* 色块信息 */
-	CONSOLE_BLOCK_INFO CBI;
+	CONSOLE_BLOCK_INFO CBI;		//84字节
 
 	/* 状态栏信息 */
-	STATUS_LINE_INFO SLI;
+	STATUS_LINE_INFO SLI;		//120字节
 
 	/* 字体信息 */
-	CONSOLE_FONT_TYPE CFT;
+	CONSOLE_FONT_TYPE CFT;		//20字节
 
 	/* 整个图形界面的上下左右需要的额外行列数 */
 	int extern_up_lines;
@@ -171,7 +209,8 @@ typedef struct _console_graphics_info_ {
 
 	/* 是否需要上下状态栏
 	   - 注：true-需要 false-不需要
-	   -    如果设置为false，则即使调用了状态新信息显示函数，也不显示内容） */
+	   -    如果设置为false，则即使调用了状态新信息显示函数，也不显示内容）
+	   - 和 STATUS_LINE_INFO 中的 is_top_status_line / is_lower_status_line 重复，只要是考虑到不同位置实现时的访问方便性 */
 	bool top_status_line;
 	bool lower_status_line;
 
@@ -182,9 +221,9 @@ typedef struct _console_graphics_info_ {
 	/* 延时时间设置 */
 	int delay_of_draw_frame;		//画外框是的延时
 	int delay_of_draw_block;		//画游戏块的延时
-	int delay_of_block_moved;		//游戏块移动的延时
+	int delay_of_block_moved;	//游戏块移动的延时
 
-	/* 【下面允许添加你认为需要的值，这些值不能通过设置函数直接设置】 */
+	/* 【下面这四个值不是通过设置函数直接设置的】 */
 	/* 整个图形界面的主框架区域的参考坐标起始位置(左上角）
 	   - 注：游戏主框架，除了有包含m行n列的色块的外框外，还有上状态栏（0/1行）/下状态栏（0/1行）/行号显示（0/2列）/列标显示区域（0/1行）
 	   -     在上述值各不相同的情况下，start_x/start_y的值是不同的 */
@@ -195,7 +234,13 @@ typedef struct _console_graphics_info_ {
 	int lines;		//为了给中文输入法提示行及运行结束的提示信息留空间，要求在计算得到的结果基础上（上额外空间+上状态栏+列标显示+主区域+下状态栏）+ 4（1中文输入法提示行+3预留空行）
 	int cols;
 
-	/* 可添加自己需要的项目 */
+	/* 【下面允许添加你认为需要的值，这些值不能通过设置函数直接设置，只是为了方便程序中调用(不需要每次重复计算)
+         因为引入了 cmd_tgmw_tools.lib，为了保持两者的结构体一致，设置这部分大小为64字节（目前是pad），
+         如果需要添加相应内容，请保持添加内容+填充字节=64字节，
+           例如：int data1;
+                 int data2;
+                 char pad[56]; 】 */
+	char pad[64];
 
 } CONSOLE_GRAPHICS_INFO;
 

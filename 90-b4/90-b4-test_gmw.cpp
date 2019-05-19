@@ -10,6 +10,7 @@
 #include <time.h>
 #include "../common/cmd_console_tools.h"
 #include "../common/cmd_gmw_tools.h"
+#include "../common/cmd_tgmw_tools.h"
 using namespace std;
 
 /***************************************************************************
@@ -85,18 +86,36 @@ static void test_by_fixed(void)
 		不显示列标
 		游戏区域为双线框，带分隔线，色块大小为2（宽度2列=1个汉字）*1（高度1行），颜色同窗口
 		色块为双框线，颜色（未完）		*/
-	gmw_init(&MyCGI);
+	int demo = 1;
+
+	if(demo)
+		tgmw_init(&MyCGI);
+	else
+		gmw_init(&MyCGI);
 
 	if (1) {
-		/* 显示初始化的框架 */
-		gmw_draw_frame(&MyCGI);
+		if (demo) {
+			/* 显示初始化的框架 */
+			tgmw_draw_frame(&MyCGI);
 
-		/* 上状态栏显示内容 */
-		sprintf(temp, "测试1 - 窗口大小：%d行 %d列", MyCGI.lines, MyCGI.cols);
-		gmw_status_line(&MyCGI, TOP_STATUS_LINE, temp);
+			/* 上状态栏显示内容 */
+			sprintf(temp, "测试1 - 窗口大小：%d行 %d列", MyCGI.lines, MyCGI.cols);
+			tgmw_status_line(&MyCGI, TOP_STATUS_LINE, temp);
 
-		/* 下状态栏显示内容 */
-		gmw_status_line(&MyCGI, LOWER_STATUS_LINE, "输入End返回", "本关结束，"); //只是给出提示而已，如果真的想输入End，后续还需要加输入及判断
+			/* 下状态栏显示内容 */
+			tgmw_status_line(&MyCGI, LOWER_STATUS_LINE, "输入End返回", "本关结束，"); //只是给出提示而已，如果真的想输入End，后续还需要加输入及判断
+		}
+		else {
+			/* 显示初始化的框架 */
+			gmw_draw_frame(&MyCGI);
+
+			/* 上状态栏显示内容 */
+			sprintf(temp, "测试1 - 窗口大小：%d行 %d列", MyCGI.lines, MyCGI.cols);
+			gmw_status_line(&MyCGI, TOP_STATUS_LINE, temp);
+
+			/* 下状态栏显示内容 */
+			gmw_status_line(&MyCGI, LOWER_STATUS_LINE, "输入End返回", "本关结束，"); //只是给出提示而已，如果真的想输入End，后续还需要加输入及判断
+		}
 
 		to_be_continued("测试1完毕", &MyCGI);
 	}
@@ -1333,6 +1352,24 @@ static void test_popstar(void)
 ***************************************************************************/
 int main(int argc, char** argv)
 {
+	/* 因为引入了 cmd_tgmw_tools.lib，此处先检查几个结构体的大小是否符合要求 */
+	if (sizeof(STATUS_LINE_INFO) != 120) {
+		cout << "STATUS_LINE_INFO 不是120字节，如果使用 cmd_tgmw_tools.lib 中的函数则可能出错" << endl;
+		return -1;
+	}
+	if (sizeof(CONSOLE_FRAME_INFO) != 136) {
+		cout << "CONSOLE_FRAME_INFO 不是136字节，如果使用 cmd_tgmw_tools.lib 中的函数则可能出错" << endl;
+		return -1;
+	}
+	if (sizeof(CONSOLE_BLOCK_INFO) != 84) {
+		cout << "CONSOLE_BLOCK_INFO 不是84字节，如果使用 cmd_tgmw_tools.lib 中的函数则可能出错" << endl;
+		return -1;
+	}
+	if (sizeof(CONSOLE_GRAPHICS_INFO) != 488) {
+		cout << "CONSOLE_GRAPHICS_INFO 不是488字节，如果使用 cmd_tgmw_tools.lib 中的函数则可能出错" << endl;
+		return -1;
+	}
+
 	/* 用固定值测试框架 */
 	test_by_fixed();
 

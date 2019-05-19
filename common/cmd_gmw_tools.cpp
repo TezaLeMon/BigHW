@@ -35,11 +35,6 @@ using namespace std;
 ***************************************************************************/
 int gmw_set_rowcol(CONSOLE_GRAPHICS_INFO *const pCGI, const int row, const int col)
 {
-	int rw, cl;
-	rw = row > 0 ? row : 0;
-	cl = col > 0 ? col : 0;
-
-
 	return 0; //此句可根据需要修改
 }
 
@@ -49,9 +44,9 @@ int gmw_set_rowcol(CONSOLE_GRAPHICS_INFO *const pCGI, const int row, const int c
   输入参数：CONSOLE_GRAPHICS_INFO *const pCGI	：整体结构指针
 		   const int bg_color					：前景色（缺省COLOR_BLACK）
 		   const int fg_color					：背景色（缺省COLOR_WHITE）
-		   const int cascade					：是否级联（取值0/1，缺省为0-不级联）
+		   const bool cascade					：是否级联（缺省为true-级联）
   返 回 值：
-  说    明：1、cascade = 1时
+  说    明：1、cascade = true时
 				同步修改游戏主区域的颜色
 				同步修改上下状态栏的正常文本的背景色和前景色，醒目文本的背景色（前景色不变）
 			2、不检查颜色值错误及冲突，需要人为保证
@@ -69,7 +64,7 @@ int gmw_set_color(CONSOLE_GRAPHICS_INFO *const pCGI, const int bgcolor, const in
   函数名称：
   功    能：设置窗口的字体
   输入参数：CONSOLE_GRAPHICS_INFO *const pCGI	：整体结构指针
-		   const char *fontname				：字体名称（只能是点阵和新宋体两种，错误及缺省均为"Terminal"）
+		   const char *fontname					：字体名称（只能是"Terminal"和"新宋体"两种，错误则返回-1，不改变字体）
 		   const int fs_high					：字体高度（缺省及错误为16，不设其它限制，人为保证）
 		   const int fs_width					：字体高度（缺省及错误为8，不设其它限制，人为保证）
   返 回 值：
@@ -116,7 +111,7 @@ int gmw_set_ext_rowcol(CONSOLE_GRAPHICS_INFO *const pCGI, const int up_lines, co
 
 /***************************************************************************
   函数名称：
-  功    能：填充 CONSOLE_BORDER_TYPE 结构中的11种线型（缺省4种）
+  功    能：填充 CONSOLE_FRAME_TYPE 结构中的11种线型（缺省4种）
   输入参数：CONSOLE_GRAPHICS_INFO *const pCGI	：整体结构指针
 			const int type						：1 - 全线 2 - 全单线 3 - 横双竖单 4 - 横单竖双
   返 回 值：
@@ -129,7 +124,7 @@ int gmw_set_frame_default_linetype(CONSOLE_GRAPHICS_INFO *const pCGI, const int 
 
 /***************************************************************************
   函数名称：
-  功    能：填充 CONSOLE_BORDER_TYPE 结构中的11种线型
+  功    能：填充 CONSOLE_FRAME_TYPE 结构中的11种线型
   输入参数：CONSOLE_GRAPHICS_INFO *const pCGI	：整体结构指针
 			const char *...						：共11种，具体见.h，此处略
   返 回 值：
@@ -147,11 +142,11 @@ int gmw_set_frame_linetype(CONSOLE_GRAPHICS_INFO *const pCGI, const char *top_le
 
 /***************************************************************************
   函数名称：
-  功    能：填充 CONSOLE_BORDER_TYPE 结构中的色块数量大小、是否需要分隔线等
+  功    能：填充 CONSOLE_FRAME_TYPE 结构中的色块数量大小、是否需要分隔线等
   输入参数：输入参数：CONSOLE_GRAPHICS_INFO *const pCGI	：整体结构指针
 			const int block_width						：宽度（错误及缺省2，因为约定表格线为中文制表符，如果给出奇数，要+1）
 			const int block_high						：高度（错误及缺省1）
-			const int separator						：是否需要分隔线（0/1）
+			const bool separator						：是否需要分隔线（缺省为true，需要分隔线）
   返 回 值：
   说    明：框架大小/是否需要分隔线等的变化会导致CONSOLE_GRAPHICS_INFO结构体中其它成员值的变化，要处理
 ***************************************************************************/
@@ -222,12 +217,12 @@ int gmw_set_block_border_switch(CONSOLE_GRAPHICS_INFO *const pCGI, const bool on
   功    能：设置是否显示上下状态栏
   输入参数：CONSOLE_GRAPHICS_INFO *const pCGI	：整体结构指针
 			const int type						：状态栏类型（上/下）
-			const bool on_off					：显示/不显示（0/1）
+			const bool on_off					：true - 需要 flase - 不需要（缺省true）
   返 回 值：
   说    明：1、状态栏的相关约定如下：
-			1、上状态栏只能一行，在主区域最上方框线/列标的上面，为主区域的最开始一行（主区域的左上角坐标就是上状态栏的坐标）
-			2、下状态栏只能一行，在主区域最下方框线的下面
-			3、状态栏的宽度为主区域宽度，如果信息过长则截断
+			   1.1、上状态栏只能一行，在主区域最上方框线/列标的上面，为主区域的最开始一行（主区域的左上角坐标就是上状态栏的坐标）
+			   1.2、下状态栏只能一行，在主区域最下方框线的下面
+			   1.3、状态栏的宽度为主区域宽度，如果信息过长则截断
 		   2、行列的变化会导致CONSOLE_GRAPHICS_INFO结构体中其它成员值的变化，要处理
 ***************************************************************************/
 int gmw_set_status_line_switch(CONSOLE_GRAPHICS_INFO *const pCGI, const int type, const bool on_off)
@@ -258,7 +253,7 @@ int gmw_set_status_line_color(CONSOLE_GRAPHICS_INFO *const pCGI, const int type,
   函数名称：
   功    能：设置是否显示行号
   输入参数：CONSOLE_GRAPHICS_INFO *const pCGI	：整体结构指针
-			const bool on_off					：显示/不显示（0/1）
+			const bool on_off					：true - 显示 flase - 不显示（缺省false）
   返 回 值：
   说    明：1、行号约定为字母A开始连续排列（如果超过26，则从a开始，超过52的统一为*，实际应用不可能）
             2、是否显示行号的变化会导致CONSOLE_GRAPHICS_INFO结构体中其它成员值的变化，要处理
@@ -272,7 +267,7 @@ int gmw_set_rowno_switch(CONSOLE_GRAPHICS_INFO *const pCGI, const bool on_off)
   函数名称：
   功    能：设置是否显示列标
   输入参数：CONSOLE_GRAPHICS_INFO *const pCGI	：整体结构指针
-			const bool on_off					：显示/不显示（0/1）
+			const bool on_off					：true - 显示 flase - 不显示（缺省false）
   返 回 值：
   说    明：1、列标约定为数字0开始连续排列（数字0-99，超过99统一为**，实际应用不可能）
             2、是否显示列标的变化会导致CONSOLE_GRAPHICS_INFO结构体中其它成员值的变化，要处理
@@ -308,6 +303,102 @@ int gmw_print(const CONSOLE_GRAPHICS_INFO *const pCGI)
 ***************************************************************************/
 int gmw_init(CONSOLE_GRAPHICS_INFO *const pCGI, const int row, const int col, const int bgcolor, const int fgcolor)
 {
+	//主框架部分
+	int t = row <= 0 ? 10 : row;
+	pCGI->row_num = t;	//主框架包含的色块的行数
+	t = col <= 0 ? 10 : col;
+	pCGI->col_num = t;	//主框架包含的色块的列数
+
+	//主框架区域组成元素的形状
+	strcpy(pCGI->CFI.top_left, "╔");
+	strcpy(pCGI->CFI.lower_left, "╚");
+	strcpy(pCGI->CFI.top_right, "╗");
+	strcpy(pCGI->CFI.lower_right, "╝");
+	strcpy(pCGI->CFI.h_normal, "═");
+	strcpy(pCGI->CFI.v_normal, "║");
+	strcpy(pCGI->CFI.h_top_separator, "╤");
+	strcpy(pCGI->CFI.h_lower_separator, "╧");
+	strcpy(pCGI->CFI.v_left_separator, "╟");
+	strcpy(pCGI->CFI.v_right_separator, "╢");
+	strcpy(pCGI->CFI.mid_separator, "┼");
+
+	//主框架区域背景色
+	t = col < 0 ? COLOR_BLACK : bgcolor;
+	pCGI->CFI.bgcolor = t;
+	pCGI->area_bgcolor = t;
+	//主框架区域前景色
+	t = col < 0 ? COLOR_WHITE : fgcolor;
+	pCGI->CFI.fgcolor = t;
+	pCGI->area_fgcolor = t;
+
+	//主框架区域色块 宽度、高度
+	pCGI->CFI.block_width = 2;
+	pCGI->CFI.block_high = 1;
+	//主框架区域色块 分割线（默认有）
+	pCGI->CFI.separator = true;
+	//每个色块附加的宽度和高度
+	pCGI->CFI.block_width_ext = 2 * pCGI->CFI.separator;
+	pCGI->CFI.block_high_ext = 1 * pCGI->CFI.separator;
+	//主框架区域色块 每行/每列总宽度（含分隔线）
+	pCGI->CFI.bwidth = pCGI->CFI.block_width * ((1 + pCGI->CFI.separator)*pCGI->col_num + 1);
+	pCGI->CFI.bhigh = pCGI->CFI.block_high * ((1 + pCGI->CFI.separator)*pCGI->row_num + 1);
+
+	//色块信息部分
+	strcpy(pCGI->CBI.top_left, "╔");
+	strcpy(pCGI->CBI.lower_left, "╚");
+	strcpy(pCGI->CBI.top_right, "╗");
+	strcpy(pCGI->CBI.lower_right, "╝");
+	strcpy(pCGI->CBI.h_normal, "═");
+	strcpy(pCGI->CBI.v_normal, "║");
+	pCGI->CBI.block_border = false;		//默认色块无边框
+
+	//状态栏部分
+	pCGI->top_status_line = true;	//默认开启上状态栏
+	pCGI->SLI.is_top_status_line = true;
+	pCGI->SLI.top_start_x = 0;	//位置（0，0）
+	pCGI->SLI.top_start_y = 0;
+	pCGI->SLI.top_normal_bgcolor = pCGI->area_bgcolor;	//正常文本颜色同窗口一致
+	pCGI->SLI.top_normal_fgcolor = pCGI->area_fgcolor;
+	pCGI->SLI.top_catchy_bgcolor = pCGI->area_bgcolor;	//醒目文本背景颜色同窗口一致
+	pCGI->SLI.top_catchy_fgcolor = COLOR_HYELLOW;	//醒目文本前景为亮黄
+	pCGI->lower_status_line = true;	//默认开启下状态栏
+	pCGI->SLI.is_lower_status_line = true;
+	pCGI->SLI.lower_start_x = 0;	//位置（0，0）
+	pCGI->SLI.lower_start_y = pCGI->CFI.bhigh + pCGI->top_status_line;
+	pCGI->SLI.lower_normal_bgcolor = pCGI->area_bgcolor;	//正常文本颜色同窗口一致
+	pCGI->SLI.lower_normal_fgcolor = pCGI->area_fgcolor;
+	pCGI->SLI.lower_catchy_bgcolor = pCGI->area_bgcolor;	//醒目文本背景颜色同窗口一致
+	pCGI->SLI.lower_catchy_fgcolor = COLOR_HYELLOW;	//醒目文本前景为亮黄
+	pCGI->SLI.width = pCGI->CFI.bwidth;
+
+	//字体部分
+	strcpy(pCGI->CFT.font_type, "Terminal");	//默认点阵8*16
+	pCGI->CFT.font_size_high = 16;
+	pCGI->CFT.font_size_width = 8;
+
+	//默认不显示行号及列标
+	pCGI->draw_frame_with_row_no = false;
+	pCGI->draw_frame_with_col_no = false;
+
+	pCGI->delay_of_draw_frame = 0;	//上下左右辅助区域全部为0
+	pCGI->delay_of_draw_block = 0;	//画边框及色块时无延时
+	pCGI->delay_of_block_moved = 3;	//色块移动时延时3ms
+
+	//主框架区域参考坐标起始位置
+	pCGI->start_x = pCGI->draw_frame_with_col_no * 2;	//考虑行号
+	pCGI->start_y = pCGI->draw_frame_with_row_no + pCGI->top_status_line;	//考虑列号 上状态栏
+
+	//整个cmd窗口大小
+	//为了给中文输入法提示行及运行结束的提示信息留空间，要求在计算得到的结果基础上
+	//（上额外空间+上状态栏+列标显示+主区域+下状态栏）+ 4（1中文输入法提示行+3预留空行）
+	pCGI->extern_up_lines = pCGI->draw_frame_with_row_no + pCGI->top_status_line;
+	pCGI->extern_down_lines = pCGI->lower_status_line + 4;
+	pCGI->lines = pCGI->CFI.bhigh + pCGI->extern_up_lines + pCGI->extern_down_lines;
+
+	pCGI->extern_left_cols = pCGI->draw_frame_with_col_no * 2;
+	pCGI->extern_right_cols = 1;
+	pCGI->cols = pCGI->CFI.bwidth + pCGI->extern_left_cols + pCGI->extern_down_lines;
+
 	return 0; //此句可根据需要修改
 }
 
@@ -320,6 +411,12 @@ int gmw_init(CONSOLE_GRAPHICS_INFO *const pCGI, const int row, const int col, co
 ***************************************************************************/
 int gmw_draw_frame(const CONSOLE_GRAPHICS_INFO *const pCGI)
 {
+	int i, j;
+	for (i = 0; i < pCGI->row_num; i++) {
+		for (j = 0; j < pCGI->col_num; j++) {
+
+		}
+	}
 	return 0; //此句可根据需要修改
 }
 
