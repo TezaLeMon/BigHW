@@ -86,7 +86,7 @@ static void test_by_fixed(void)
 		不显示列标
 		游戏区域为双线框，带分隔线，色块大小为2（宽度2列=1个汉字）*1（高度1行），颜色同窗口
 		色块为双框线，颜色（未完）		*/
-	int demo = 1;
+	int demo = 0;
 
 	if(demo)
 		tgmw_init(&MyCGI);
