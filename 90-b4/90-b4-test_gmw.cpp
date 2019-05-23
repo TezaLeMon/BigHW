@@ -86,36 +86,20 @@ static void test_by_fixed(void)
 		不显示列标
 		游戏区域为双线框，带分隔线，色块大小为2（宽度2列=1个汉字）*1（高度1行），颜色同窗口
 		色块为双框线，颜色（未完）		*/
-	int demo = 0;
+	int demo = 1;
 
-	if(demo)
-		tgmw_init(&MyCGI);
-	else
-		gmw_init(&MyCGI);
+	gmw_init(&MyCGI);
 
 	if (1) {
-		if (demo) {
-			/* 显示初始化的框架 */
-			tgmw_draw_frame(&MyCGI);
+		/* 显示初始化的框架 */
+		gmw_draw_frame(&MyCGI);
 
-			/* 上状态栏显示内容 */
-			sprintf(temp, "测试1 - 窗口大小：%d行 %d列", MyCGI.lines, MyCGI.cols);
-			tgmw_status_line(&MyCGI, TOP_STATUS_LINE, temp);
+		/* 上状态栏显示内容 */
+		sprintf(temp, "测试1 - 窗口大小：%d行 %d列", MyCGI.lines, MyCGI.cols);
+		gmw_status_line(&MyCGI, TOP_STATUS_LINE, temp);
 
-			/* 下状态栏显示内容 */
-			tgmw_status_line(&MyCGI, LOWER_STATUS_LINE, "输入End返回", "本关结束，"); //只是给出提示而已，如果真的想输入End，后续还需要加输入及判断
-		}
-		else {
-			/* 显示初始化的框架 */
-			gmw_draw_frame(&MyCGI);
-
-			/* 上状态栏显示内容 */
-			sprintf(temp, "测试1 - 窗口大小：%d行 %d列", MyCGI.lines, MyCGI.cols);
-			gmw_status_line(&MyCGI, TOP_STATUS_LINE, temp);
-
-			/* 下状态栏显示内容 */
-			gmw_status_line(&MyCGI, LOWER_STATUS_LINE, "输入End返回", "本关结束，"); //只是给出提示而已，如果真的想输入End，后续还需要加输入及判断
-		}
+		/* 下状态栏显示内容 */
+		gmw_status_line(&MyCGI, LOWER_STATUS_LINE, "输入End返回", "本关结束，"); //只是给出提示而已，如果真的想输入End，后续还需要加输入及判断
 
 		to_be_continued("测试1完毕", &MyCGI);
 	}
@@ -141,12 +125,12 @@ static void test_by_fixed(void)
 		gmw_set_ext_rowcol(&MyCGI, 3, 4, 10, 20);				//设置额外行列
 		gmw_set_color(&MyCGI, COLOR_BLUE, COLOR_HGREEN);		//修改窗口颜色并级联修改游戏区域、上下状态栏
 		gmw_set_font(&MyCGI, "新宋体", 16, 0);				//TrueType字体（新宋体）宽度不需要，可任意设置
-		gmw_set_frame_style(&MyCGI, 6, 3, true);				//每个色块区域宽度6列*高度3列，要分隔线
-		gmw_set_frame_default_linetype(&MyCGI, 2);			//设置框架线型为预置值2（全部为单线）
-		gmw_set_rowno_switch(&MyCGI, true);					//显示行号
-		gmw_set_colno_switch(&MyCGI, true);					//显示列标
-			gmw_set_delay(&MyCGI, DELAY_OF_DRAW_FRAME, 200);		//画边框的延时
-		gmw_set_block_border_switch(&MyCGI, true);			//设置色块需要小边框
+		tgmw_set_frame_style(&MyCGI, 6, 3, true);				//每个色块区域宽度6列*高度3列，要分隔线
+		tgmw_set_frame_default_linetype(&MyCGI, 2);			//设置框架线型为预置值2（全部为单线）
+		tgmw_set_rowno_switch(&MyCGI, true);					//显示行号
+		tgmw_set_colno_switch(&MyCGI, true);					//显示列标
+			tgmw_set_delay(&MyCGI, DELAY_OF_DRAW_FRAME, 200);		//画边框的延时
+		tgmw_set_block_border_switch(&MyCGI, true);			//设置色块需要小边框
 
 		/* 显示框架 */
 		gmw_draw_frame(&MyCGI);

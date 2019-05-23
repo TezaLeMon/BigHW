@@ -41,47 +41,17 @@ int gmw_set_rowcol(CONSOLE_GRAPHICS_INFO *const pCGI, const int row, const int c
 	t = col <= 0 ? 10 : col;
 	pCGI->col_num = t;	//主框架包含的色块的列数
 
+	//下状态栏位置
 	pCGI->SLI.lower_start_y = pCGI->start_y + pCGI->CFI.block_high * ((1 + pCGI->CFI.separator)*pCGI->row_num + 1) + pCGI->top_status_line;
-	pCGI->SLI.lower_normal_bgcolor = pCGI->area_bgcolor;	//正常文本颜色同窗口一致
-	pCGI->SLI.lower_normal_fgcolor = pCGI->area_fgcolor;
-	pCGI->SLI.lower_catchy_bgcolor = pCGI->area_bgcolor;	//醒目文本背景颜色同窗口一致
-	pCGI->SLI.lower_catchy_fgcolor = COLOR_HYELLOW;	//醒目文本前景为亮黄
+	//下状态栏宽度
 	pCGI->SLI.width = pCGI->CFI.block_width * ((1 + pCGI->CFI.separator)*pCGI->col_num + 1);
-
-	//SLI填充部分置0
-	memset(pCGI->SLI.pad1, '\0', sizeof(pCGI->SLI.pad1));
-	memset(pCGI->SLI.pad, '\0', sizeof(pCGI->SLI.pad));
-
-	//字体部分
-	strcpy(pCGI->CFT.font_type, "Terminal");	//默认点阵8*16
-	pCGI->CFT.font_size_high = 16;
-	pCGI->CFT.font_size_width = 8;
-
-	//默认不显示行号及列标
-	pCGI->draw_frame_with_row_no = false;
-	pCGI->draw_frame_with_col_no = false;
-
-	pCGI->delay_of_draw_frame = 0;	//上下左右辅助区域全部为0
-	pCGI->delay_of_draw_block = 0;	//画边框及色块时无延时
-	pCGI->delay_of_block_moved = 3;	//色块移动时延时3ms
-
-	//主框架区域参考坐标起始位置
-	pCGI->start_x = 0;
-	pCGI->start_y = 0;
 
 	//整个cmd窗口大小
 	//为了给中文输入法提示行及运行结束的提示信息留空间，要求在计算得到的结果基础上
 	//（上额外空间+上状态栏+列标显示+主区域+下状态栏）+ 4（1中文输入法提示行+3预留空行）
-	pCGI->extern_up_lines = 0;
-	pCGI->extern_down_lines = 0;
 	pCGI->lines = pCGI->CFI.block_high * ((1 + pCGI->CFI.separator)*pCGI->row_num + 1) + pCGI->extern_up_lines + pCGI->extern_down_lines + pCGI->draw_frame_with_row_no + pCGI->top_status_line + pCGI->lower_status_line + 4;
+	pCGI->cols = pCGI->CFI.block_width * ((1 + pCGI->CFI.separator)*pCGI->col_num + 1) + pCGI->extern_left_cols + pCGI->extern_right_cols + pCGI->draw_frame_with_col_no * 2 + 1;
 
-	pCGI->extern_left_cols = 0;
-	pCGI->extern_right_cols = 0;
-	pCGI->cols = pCGI->CFI.block_width * ((1 + pCGI->CFI.separator)*pCGI->col_num + 1) + pCGI->extern_left_cols + pCGI->extern_down_lines + pCGI->draw_frame_with_col_no * 2 + 1;
-
-	//主结构体填充置0
-	memset(pCGI->pad, '\0', sizeof(pCGI->pad));
 	return 0; //此句可根据需要修改
 }
 
@@ -104,6 +74,25 @@ int gmw_set_rowcol(CONSOLE_GRAPHICS_INFO *const pCGI, const int row, const int c
 ***************************************************************************/
 int gmw_set_color(CONSOLE_GRAPHICS_INFO *const pCGI, const int bgcolor, const int fgcolor, const bool cascade)
 {
+	//主框架区域背景色
+	//int t = (bgcolor < 0 || bgcolor>15) ? COLOR_BLACK : bgcolor;  //不检查？
+	pCGI->area_bgcolor = bgcolor;
+	//主框架区域前景色
+	//t = (fgcolor < 0 || fgcolor>15) < 0 ? COLOR_WHITE : fgcolor;
+	pCGI->area_fgcolor = fgcolor;
+
+	if (cascade) {
+		//主区域部分
+		pCGI->CFI.bgcolor = bgcolor;
+		pCGI->CFI.fgcolor = fgcolor;
+		//状态栏部分
+		pCGI->SLI.top_normal_bgcolor = pCGI->area_bgcolor;	//正常文本颜色同窗口一致
+		pCGI->SLI.top_normal_fgcolor = pCGI->area_fgcolor;
+		pCGI->SLI.top_catchy_bgcolor = pCGI->area_bgcolor;	//醒目文本背景颜色同窗口一致
+		pCGI->SLI.lower_normal_bgcolor = pCGI->area_bgcolor;	//正常文本颜色同窗口一致
+		pCGI->SLI.lower_normal_fgcolor = pCGI->area_fgcolor;
+		pCGI->SLI.lower_catchy_bgcolor = pCGI->area_bgcolor;	//醒目文本背景颜色同窗口一致
+	}
 	return 0; //此句可根据需要修改
 }
 
@@ -120,6 +109,10 @@ int gmw_set_color(CONSOLE_GRAPHICS_INFO *const pCGI, const int bgcolor, const in
 ***************************************************************************/
 int gmw_set_font(CONSOLE_GRAPHICS_INFO *const pCGI, const char *fontname, const int fs_high, const int fs_width)
 {
+	//字体部分
+	strcpy(pCGI->CFT.font_type, fontname);	//默认点阵8*16
+	pCGI->CFT.font_size_high = fs_high;
+	pCGI->CFT.font_size_width = fs_width;
 	return 0; //此句可根据需要修改
 }
 
@@ -153,6 +146,29 @@ int gmw_set_delay(CONSOLE_GRAPHICS_INFO *const pCGI, const int type, const int d
 ***************************************************************************/
 int gmw_set_ext_rowcol(CONSOLE_GRAPHICS_INFO *const pCGI, const int up_lines, const int down_lines, const int left_cols, const int right_cols)
 {
+	//额外行列更变
+	pCGI->extern_up_lines = up_lines < 0 ? 0 : up_lines;
+	pCGI->extern_down_lines = down_lines < 0 ? 0 : down_lines;
+	pCGI->extern_left_cols = left_cols < 0 ? 0 : left_cols;
+	pCGI->extern_right_cols = right_cols < 0 ? 0 : right_cols;
+
+	//其他成员值更变
+		//主框架区域参考坐标起始位置
+	pCGI->start_x = pCGI->extern_left_cols;
+	pCGI->start_y = pCGI->extern_up_lines;
+
+	//状态栏部分
+	pCGI->SLI.top_start_x = pCGI->start_x;
+	pCGI->SLI.top_start_y = pCGI->start_y;
+	pCGI->SLI.lower_start_x = pCGI->start_x;
+	pCGI->SLI.lower_start_y = pCGI->start_y + pCGI->CFI.block_high * ((1 + pCGI->CFI.separator)*pCGI->row_num + 1) + pCGI->top_status_line;
+
+	//整个cmd窗口大小
+	//为了给中文输入法提示行及运行结束的提示信息留空间，要求在计算得到的结果基础上
+	//（上额外空间+上状态栏+列标显示+主区域+下状态栏）+ 4（1中文输入法提示行+3预留空行）
+	pCGI->lines = pCGI->CFI.block_high * ((1 + pCGI->CFI.separator)*pCGI->row_num + 1) + pCGI->extern_up_lines + pCGI->extern_down_lines + pCGI->draw_frame_with_row_no + pCGI->top_status_line + pCGI->lower_status_line + 4;
+	pCGI->cols = pCGI->CFI.block_width * ((1 + pCGI->CFI.separator)*pCGI->col_num + 1) + pCGI->extern_left_cols + pCGI->extern_right_cols + pCGI->draw_frame_with_col_no * 2 + 1;
+
 	return 0; //此句可根据需要修改
 }
 
@@ -356,6 +372,10 @@ int gmw_init(CONSOLE_GRAPHICS_INFO *const pCGI, const int row, const int col, co
 	t = col <= 0 ? 10 : col;
 	pCGI->col_num = t;	//主框架包含的色块的列数
 
+	//主框架区域参考坐标起始位置
+	pCGI->start_x = 0;
+	pCGI->start_y = 0;
+
 	//主框架区域组成元素的形状
 	strcpy(pCGI->CFI.top_left, "╔");
 	strcpy(pCGI->CFI.lower_left, "╚");
@@ -411,16 +431,16 @@ int gmw_init(CONSOLE_GRAPHICS_INFO *const pCGI, const int row, const int col, co
 	//状态栏部分
 	pCGI->top_status_line = true;	//默认开启上状态栏
 	pCGI->SLI.is_top_status_line = true;
-	pCGI->SLI.top_start_x = 0;	//位置（0，0）
-	pCGI->SLI.top_start_y = 0;
+	pCGI->SLI.top_start_x = pCGI->start_x;	//位置（0，0）
+	pCGI->SLI.top_start_y = pCGI->start_y;
 	pCGI->SLI.top_normal_bgcolor = pCGI->area_bgcolor;	//正常文本颜色同窗口一致
 	pCGI->SLI.top_normal_fgcolor = pCGI->area_fgcolor;
 	pCGI->SLI.top_catchy_bgcolor = pCGI->area_bgcolor;	//醒目文本背景颜色同窗口一致
 	pCGI->SLI.top_catchy_fgcolor = COLOR_HYELLOW;	//醒目文本前景为亮黄
 	pCGI->lower_status_line = true;	//默认开启下状态栏
 	pCGI->SLI.is_lower_status_line = true;
-	pCGI->SLI.lower_start_x = 0;	//位置（0，...）
-	pCGI->SLI.lower_start_y = pCGI->CFI.block_high * ((1 + pCGI->CFI.separator)*pCGI->row_num + 1) + pCGI->top_status_line;
+	pCGI->SLI.lower_start_x = pCGI->start_x;	//位置（0，...）
+	pCGI->SLI.lower_start_y = pCGI->start_y + pCGI->CFI.block_high * ((1 + pCGI->CFI.separator)*pCGI->row_num + 1) + pCGI->top_status_line;
 	pCGI->SLI.lower_normal_bgcolor = pCGI->area_bgcolor;	//正常文本颜色同窗口一致
 	pCGI->SLI.lower_normal_fgcolor = pCGI->area_fgcolor;
 	pCGI->SLI.lower_catchy_bgcolor = pCGI->area_bgcolor;	//醒目文本背景颜色同窗口一致
@@ -444,10 +464,6 @@ int gmw_init(CONSOLE_GRAPHICS_INFO *const pCGI, const int row, const int col, co
 	pCGI->delay_of_draw_block = 0;	//画边框及色块时无延时
 	pCGI->delay_of_block_moved = 3;	//色块移动时延时3ms
 
-	//主框架区域参考坐标起始位置
-	pCGI->start_x = 0;
-	pCGI->start_y = 0;
-
 	//整个cmd窗口大小
 	//为了给中文输入法提示行及运行结束的提示信息留空间，要求在计算得到的结果基础上
 	//（上额外空间+上状态栏+列标显示+主区域+下状态栏）+ 4（1中文输入法提示行+3预留空行）
@@ -457,7 +473,7 @@ int gmw_init(CONSOLE_GRAPHICS_INFO *const pCGI, const int row, const int col, co
 
 	pCGI->extern_left_cols = 0;
 	pCGI->extern_right_cols = 0;
-	pCGI->cols = pCGI->CFI.block_width * ((1 + pCGI->CFI.separator)*pCGI->col_num + 1) + pCGI->extern_left_cols + pCGI->extern_down_lines + pCGI->draw_frame_with_col_no * 2 + 1;
+	pCGI->cols = pCGI->CFI.block_width * ((1 + pCGI->CFI.separator)*pCGI->col_num + 1) + pCGI->extern_left_cols + pCGI->extern_right_cols + pCGI->draw_frame_with_col_no * 2 + 1;
 
 	//主结构体填充置0
 	memset(pCGI->pad, '\0', sizeof(pCGI->pad));
@@ -477,6 +493,7 @@ int gmw_draw_frame(const CONSOLE_GRAPHICS_INFO *const pCGI)
 	int i, j;
 	char temp[2 * (CFI_LEN - 1) + 1];
 	setcolor(pCGI->CFI.bgcolor, pCGI->CFI.fgcolor);
+	setconsoleborder(pCGI->cols, pCGI->lines, pCGI->cols, pCGI->lines);
 
 	//第一行
 	gotoxy(pCGI->start_x + 2 * pCGI->draw_frame_with_col_no, pCGI->start_y + pCGI->top_status_line);
