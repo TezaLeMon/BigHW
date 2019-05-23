@@ -125,8 +125,8 @@ static void test_by_fixed(void)
 		gmw_set_ext_rowcol(&MyCGI, 3, 4, 10, 20);				//设置额外行列
 		gmw_set_color(&MyCGI, COLOR_BLUE, COLOR_HGREEN);		//修改窗口颜色并级联修改游戏区域、上下状态栏
 		gmw_set_font(&MyCGI, "新宋体", 16, 0);				//TrueType字体（新宋体）宽度不需要，可任意设置
-		tgmw_set_frame_style(&MyCGI, 6, 3, true);				//每个色块区域宽度6列*高度3列，要分隔线
-		tgmw_set_frame_default_linetype(&MyCGI, 2);			//设置框架线型为预置值2（全部为单线）
+		gmw_set_frame_style(&MyCGI, 6, 3, true);				//每个色块区域宽度6列*高度3列，要分隔线
+		gmw_set_frame_default_linetype(&MyCGI, 2);			//设置框架线型为预置值2（全部为单线）
 		tgmw_set_rowno_switch(&MyCGI, true);					//显示行号
 		tgmw_set_colno_switch(&MyCGI, true);					//显示列标
 			tgmw_set_delay(&MyCGI, DELAY_OF_DRAW_FRAME, 200);		//画边框的延时

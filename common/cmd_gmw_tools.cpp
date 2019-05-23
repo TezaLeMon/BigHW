@@ -42,15 +42,15 @@ int gmw_set_rowcol(CONSOLE_GRAPHICS_INFO *const pCGI, const int row, const int c
 	pCGI->col_num = t;	//主框架包含的色块的列数
 
 	//下状态栏位置
-	pCGI->SLI.lower_start_y = pCGI->start_y + pCGI->CFI.block_high * ((1 + pCGI->CFI.separator)*pCGI->row_num + 1) + pCGI->top_status_line;
+	pCGI->SLI.lower_start_y = pCGI->start_y + pCGI->CFI.block_high * pCGI->row_num + 2 + pCGI->CFI.separator*(pCGI->row_num - 1) + pCGI->top_status_line;
 	//下状态栏宽度
-	pCGI->SLI.width = pCGI->CFI.block_width * ((1 + pCGI->CFI.separator)*pCGI->col_num + 1);
+	pCGI->SLI.width = pCGI->CFI.block_width * pCGI->col_num + 2 * (2 + pCGI->CFI.separator*(pCGI->col_num - 1));
 
 	//整个cmd窗口大小
 	//为了给中文输入法提示行及运行结束的提示信息留空间，要求在计算得到的结果基础上
 	//（上额外空间+上状态栏+列标显示+主区域+下状态栏）+ 4（1中文输入法提示行+3预留空行）
-	pCGI->lines = pCGI->CFI.block_high * ((1 + pCGI->CFI.separator)*pCGI->row_num + 1) + pCGI->extern_up_lines + pCGI->extern_down_lines + pCGI->draw_frame_with_row_no + pCGI->top_status_line + pCGI->lower_status_line + 4;
-	pCGI->cols = pCGI->CFI.block_width * ((1 + pCGI->CFI.separator)*pCGI->col_num + 1) + pCGI->extern_left_cols + pCGI->extern_right_cols + pCGI->draw_frame_with_col_no * 2 + 1;
+	pCGI->lines = pCGI->CFI.block_high * pCGI->row_num + 2 + pCGI->CFI.separator*(pCGI->row_num - 1) + pCGI->extern_up_lines + pCGI->extern_down_lines + pCGI->draw_frame_with_row_no + pCGI->top_status_line + pCGI->lower_status_line + 4;
+	pCGI->cols = pCGI->CFI.block_width * pCGI->col_num + 2 * (2 + pCGI->CFI.separator*(pCGI->col_num - 1)) + pCGI->extern_left_cols + pCGI->extern_right_cols + pCGI->draw_frame_with_col_no * 2 + 1;
 
 	return 0; //此句可根据需要修改
 }
@@ -161,13 +161,13 @@ int gmw_set_ext_rowcol(CONSOLE_GRAPHICS_INFO *const pCGI, const int up_lines, co
 	pCGI->SLI.top_start_x = pCGI->start_x;
 	pCGI->SLI.top_start_y = pCGI->start_y;
 	pCGI->SLI.lower_start_x = pCGI->start_x;
-	pCGI->SLI.lower_start_y = pCGI->start_y + pCGI->CFI.block_high * ((1 + pCGI->CFI.separator)*pCGI->row_num + 1) + pCGI->top_status_line;
+	pCGI->SLI.lower_start_y = pCGI->start_y + pCGI->CFI.block_high * pCGI->row_num + 2 + pCGI->CFI.separator*(pCGI->row_num - 1) + pCGI->top_status_line;
 
 	//整个cmd窗口大小
 	//为了给中文输入法提示行及运行结束的提示信息留空间，要求在计算得到的结果基础上
 	//（上额外空间+上状态栏+列标显示+主区域+下状态栏）+ 4（1中文输入法提示行+3预留空行）
-	pCGI->lines = pCGI->CFI.block_high * ((1 + pCGI->CFI.separator)*pCGI->row_num + 1) + pCGI->extern_up_lines + pCGI->extern_down_lines + pCGI->draw_frame_with_row_no + pCGI->top_status_line + pCGI->lower_status_line + 4;
-	pCGI->cols = pCGI->CFI.block_width * ((1 + pCGI->CFI.separator)*pCGI->col_num + 1) + pCGI->extern_left_cols + pCGI->extern_right_cols + pCGI->draw_frame_with_col_no * 2 + 1;
+	pCGI->lines = pCGI->CFI.block_high * pCGI->row_num + 2 + pCGI->CFI.separator*(pCGI->row_num - 1) + pCGI->extern_down_lines + pCGI->draw_frame_with_row_no + pCGI->top_status_line + pCGI->lower_status_line + 4;
+	pCGI->cols = pCGI->CFI.block_width * pCGI->col_num + 2 * (2 + pCGI->CFI.separator*(pCGI->col_num - 1)) + pCGI->extern_left_cols + pCGI->extern_right_cols + pCGI->draw_frame_with_col_no * 2 + 1;
 
 	return 0; //此句可根据需要修改
 }
@@ -182,6 +182,19 @@ int gmw_set_ext_rowcol(CONSOLE_GRAPHICS_INFO *const pCGI, const int up_lines, co
 ***************************************************************************/
 int gmw_set_frame_default_linetype(CONSOLE_GRAPHICS_INFO *const pCGI, const int type)
 {
+	//主框架区域组成元素的形状
+	strcpy(pCGI->CFI.top_left, "╔");
+	strcpy(pCGI->CFI.lower_left, "╚");
+	strcpy(pCGI->CFI.top_right, "╗");
+	strcpy(pCGI->CFI.lower_right, "╝");
+	strcpy(pCGI->CFI.h_normal, "═");
+	strcpy(pCGI->CFI.v_normal, "║");
+	strcpy(pCGI->CFI.h_top_separator, "╤");
+	strcpy(pCGI->CFI.h_lower_separator, "╧");
+	strcpy(pCGI->CFI.v_left_separator, "╟");
+	strcpy(pCGI->CFI.v_right_separator, "╢");
+	strcpy(pCGI->CFI.mid_separator, "┼");
+
 	return 0; //此句可根据需要修改
 }
 
@@ -215,6 +228,36 @@ int gmw_set_frame_linetype(CONSOLE_GRAPHICS_INFO *const pCGI, const char *top_le
 ***************************************************************************/
 int gmw_set_frame_style(CONSOLE_GRAPHICS_INFO *const pCGI, const int block_width, const int block_high, const bool separator)
 {
+	if (block_width <= 0)
+		pCGI->CFI.block_width = 2;
+	else if (block_width % 2)
+		pCGI->CFI.block_width = block_width + 1;
+	else
+		pCGI->CFI.block_width = block_width;
+
+	if (block_high <= 0)
+		pCGI->CFI.block_high = 1;
+	else
+		pCGI->CFI.block_high = block_high;
+
+	pCGI->CFI.separator = separator;
+
+	pCGI->CFI.block_width_ext = 2 * pCGI->CFI.separator;
+	pCGI->CFI.block_high_ext = 1 * pCGI->CFI.separator;
+	//主框架区域色块 每行/每列总宽度（含分隔线）
+	pCGI->CFI.bwidth = pCGI->CFI.block_width + 2 * pCGI->CFI.separator;
+	pCGI->CFI.bhigh = pCGI->CFI.block_high + pCGI->CFI.separator;
+
+	//状态栏部分
+	pCGI->SLI.lower_start_y = pCGI->start_y + pCGI->CFI.block_high * pCGI->row_num + 2 + pCGI->CFI.separator*(pCGI->row_num - 1) + pCGI->top_status_line;
+	pCGI->SLI.width = pCGI->CFI.block_width * pCGI->col_num + 2 * (2 + pCGI->CFI.separator*(pCGI->col_num - 1));
+
+	//整个cmd窗口大小
+	//为了给中文输入法提示行及运行结束的提示信息留空间，要求在计算得到的结果基础上
+	//（上额外空间+上状态栏+列标显示+主区域+下状态栏）+ 4（1中文输入法提示行+3预留空行）
+	pCGI->lines = pCGI->CFI.block_high * pCGI->row_num + 2 + pCGI->CFI.separator*(pCGI->row_num - 1) + pCGI->extern_up_lines + pCGI->extern_down_lines + pCGI->draw_frame_with_row_no + pCGI->top_status_line + pCGI->lower_status_line + 4;
+	pCGI->cols = pCGI->CFI.block_width * pCGI->col_num + 2 * (2 + pCGI->CFI.separator*(pCGI->col_num - 1)) + pCGI->extern_left_cols + pCGI->extern_right_cols + pCGI->draw_frame_with_col_no * 2 + 1;
+	
 	return 0; //此句可根据需要修改
 }
 
@@ -407,8 +450,8 @@ int gmw_init(CONSOLE_GRAPHICS_INFO *const pCGI, const int row, const int col, co
 	pCGI->CFI.block_width_ext = 2 * pCGI->CFI.separator;
 	pCGI->CFI.block_high_ext = 1 * pCGI->CFI.separator;
 	//主框架区域色块 每行/每列总宽度（含分隔线）
-	pCGI->CFI.bwidth = pCGI->CFI.block_width * (1 + pCGI->CFI.separator);
-	pCGI->CFI.bhigh = pCGI->CFI.block_high * (1 + pCGI->CFI.separator);
+	pCGI->CFI.bwidth = pCGI->CFI.block_width + 2 * pCGI->CFI.separator;
+	pCGI->CFI.bhigh = pCGI->CFI.block_high + pCGI->CFI.separator;
 
 	//CFI填充部分置0
 	memset(pCGI->CFI.pad1, '\0', sizeof(pCGI->CFI.pad1));
@@ -440,12 +483,12 @@ int gmw_init(CONSOLE_GRAPHICS_INFO *const pCGI, const int row, const int col, co
 	pCGI->lower_status_line = true;	//默认开启下状态栏
 	pCGI->SLI.is_lower_status_line = true;
 	pCGI->SLI.lower_start_x = pCGI->start_x;	//位置（0，...）
-	pCGI->SLI.lower_start_y = pCGI->start_y + pCGI->CFI.block_high * ((1 + pCGI->CFI.separator)*pCGI->row_num + 1) + pCGI->top_status_line;
+	pCGI->SLI.lower_start_y = pCGI->start_y + pCGI->CFI.block_high * pCGI->row_num + 2 + pCGI->CFI.separator*(pCGI->row_num - 1) + pCGI->top_status_line;
 	pCGI->SLI.lower_normal_bgcolor = pCGI->area_bgcolor;	//正常文本颜色同窗口一致
 	pCGI->SLI.lower_normal_fgcolor = pCGI->area_fgcolor;
 	pCGI->SLI.lower_catchy_bgcolor = pCGI->area_bgcolor;	//醒目文本背景颜色同窗口一致
 	pCGI->SLI.lower_catchy_fgcolor = COLOR_HYELLOW;	//醒目文本前景为亮黄
-	pCGI->SLI.width = pCGI->CFI.block_width * ((1 + pCGI->CFI.separator)*pCGI->col_num + 1);
+	pCGI->SLI.width = pCGI->CFI.block_width * pCGI->col_num + 2 * (2 + pCGI->CFI.separator*(pCGI->col_num - 1));
 
 	//SLI填充部分置0
 	memset(pCGI->SLI.pad1, '\0', sizeof(pCGI->SLI.pad1));
@@ -469,11 +512,11 @@ int gmw_init(CONSOLE_GRAPHICS_INFO *const pCGI, const int row, const int col, co
 	//（上额外空间+上状态栏+列标显示+主区域+下状态栏）+ 4（1中文输入法提示行+3预留空行）
 	pCGI->extern_up_lines = 0;
 	pCGI->extern_down_lines = 0;
-	pCGI->lines = pCGI->CFI.block_high * ((1 + pCGI->CFI.separator)*pCGI->row_num + 1) + pCGI->extern_up_lines + pCGI->extern_down_lines + pCGI->draw_frame_with_row_no + pCGI->top_status_line + pCGI->lower_status_line + 4;
+	pCGI->lines = pCGI->CFI.block_high * pCGI->row_num + 2 + pCGI->CFI.separator*(pCGI->row_num - 1) + pCGI->top_status_line + pCGI->extern_up_lines + pCGI->extern_down_lines + pCGI->draw_frame_with_row_no + pCGI->top_status_line + pCGI->lower_status_line + 4;
 
 	pCGI->extern_left_cols = 0;
 	pCGI->extern_right_cols = 0;
-	pCGI->cols = pCGI->CFI.block_width * ((1 + pCGI->CFI.separator)*pCGI->col_num + 1) + pCGI->extern_left_cols + pCGI->extern_right_cols + pCGI->draw_frame_with_col_no * 2 + 1;
+	pCGI->cols = pCGI->CFI.block_width * pCGI->col_num + 2 * (2 + pCGI->CFI.separator*(pCGI->col_num - 1)) + pCGI->extern_left_cols + pCGI->extern_right_cols + pCGI->draw_frame_with_col_no * 2 + 1;
 
 	//主结构体填充置0
 	memset(pCGI->pad, '\0', sizeof(pCGI->pad));
@@ -508,19 +551,21 @@ int gmw_draw_frame(const CONSOLE_GRAPHICS_INFO *const pCGI)
 	Sleep(pCGI->delay_of_draw_frame);
 	//中间部分
 	for (i = 1; i < pCGI->row_num; i++) {
-		gotoxy(pCGI->start_x + 2 * pCGI->draw_frame_with_col_no, (1 + pCGI->CFI.separator) * (i - 1) + 1 + pCGI->start_y + pCGI->top_status_line);
-		cout << pCGI->CFI.v_normal;
-		for (j = 1; j < pCGI->col_num; j++) {
+		for (int h = 0; h < pCGI->CFI.block_high; h++) {
+			gotoxy(pCGI->start_x + 2 * pCGI->draw_frame_with_col_no, h + (1 + pCGI->CFI.separator) * (i - 1) + 1 + pCGI->start_y + pCGI->top_status_line);
+			cout << pCGI->CFI.v_normal;
+			for (j = 1; j < pCGI->col_num; j++) {
+				for (int t = 0; t < pCGI->CFI.block_width; t++)
+					cout << " ";
+				if (pCGI->CFI.separator)
+					cout << pCGI->CFI.v_normal;
+			}
 			for (int t = 0; t < pCGI->CFI.block_width; t++)
 				cout << " ";
-			if (pCGI->CFI.separator)
-				cout << pCGI->CFI.v_normal;
+			cout << pCGI->CFI.v_normal;
 		}
-		for (int t = 0; t < pCGI->CFI.block_width; t++)
-			cout << " ";
-		cout << pCGI->CFI.v_normal;
 		if (pCGI->CFI.separator) {
-			gotoxy(pCGI->start_x + 2 * pCGI->draw_frame_with_col_no, (1 + pCGI->CFI.separator) * (i - 1) + 2 + pCGI->start_y + pCGI->top_status_line);
+			gotoxy(pCGI->start_x + 2 * pCGI->draw_frame_with_col_no, pCGI->CFI.block_high + (1 + pCGI->CFI.separator) * (i - 1) + 1 + pCGI->start_y + pCGI->top_status_line);
 			cout << pCGI->CFI.v_left_separator;
 			for (j = 1; j < pCGI->col_num; j++) {
 				cout << pCGI->CFI.h_normal;
@@ -532,18 +577,20 @@ int gmw_draw_frame(const CONSOLE_GRAPHICS_INFO *const pCGI)
 		Sleep(pCGI->delay_of_draw_frame);
 	}
 	//最后两行
-	gotoxy(pCGI->start_x + 2 * pCGI->draw_frame_with_col_no, (1 + pCGI->CFI.separator) * (i - 1) + 1 + pCGI->start_y + pCGI->top_status_line);
-	cout << pCGI->CFI.v_normal;
-	for (j = 1; j < pCGI->col_num; j++) {
+	for (int h = 0; h < pCGI->CFI.block_high; h++) {
+		gotoxy(pCGI->start_x + 2 * pCGI->draw_frame_with_col_no, h + (1 + pCGI->CFI.separator) * (i - 1) + 1 + pCGI->start_y + pCGI->top_status_line);
+		cout << pCGI->CFI.v_normal;
+		for (j = 1; j < pCGI->col_num; j++) {
+			for (int t = 0; t < pCGI->CFI.block_width; t++)
+				cout << " ";
+			if (pCGI->CFI.separator)
+				cout << pCGI->CFI.v_normal;
+		}
 		for (int t = 0; t < pCGI->CFI.block_width; t++)
 			cout << " ";
-		if (pCGI->CFI.separator)
-			cout << pCGI->CFI.v_normal;
+		cout << pCGI->CFI.v_normal;
 	}
-	for (int t = 0; t < pCGI->CFI.block_width; t++)
-		cout << " ";
-	cout << pCGI->CFI.v_normal;
-	gotoxy(pCGI->start_x + 2 * pCGI->draw_frame_with_col_no, (1 + pCGI->CFI.separator) * (i - 1) + 2 + pCGI->start_y + pCGI->top_status_line);
+	gotoxy(pCGI->start_x + 2 * pCGI->draw_frame_with_col_no, pCGI->CFI.block_high + (1 + pCGI->CFI.separator) * (i - 1) + 1 + pCGI->start_y + pCGI->top_status_line);
 	cout << pCGI->CFI.lower_left;
 	for (j = 1; j < pCGI->col_num; j++) {
 		cout << pCGI->CFI.h_normal;
