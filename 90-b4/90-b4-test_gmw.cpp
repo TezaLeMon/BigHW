@@ -88,7 +88,7 @@ static void test_by_fixed(void)
 		色块为双框线，颜色（未完）		*/
 	int demo = 1;
 
-	gmw_init(&MyCGI);
+	tgmw_init(&MyCGI);
 
 	if (1) {
 		/* 显示初始化的框架 */
@@ -127,9 +127,9 @@ static void test_by_fixed(void)
 		gmw_set_font(&MyCGI, "新宋体", 16, 0);				//TrueType字体（新宋体）宽度不需要，可任意设置
 		gmw_set_frame_style(&MyCGI, 6, 3, true);				//每个色块区域宽度6列*高度3列，要分隔线
 		gmw_set_frame_default_linetype(&MyCGI, 2);			//设置框架线型为预置值2（全部为单线）
-		tgmw_set_rowno_switch(&MyCGI, true);					//显示行号
-		tgmw_set_colno_switch(&MyCGI, true);					//显示列标
-			tgmw_set_delay(&MyCGI, DELAY_OF_DRAW_FRAME, 200);		//画边框的延时
+ 		gmw_set_rowno_switch(&MyCGI, true);					//显示行号
+		gmw_set_colno_switch(&MyCGI, true);					//显示列标
+		tgmw_set_delay(&MyCGI, DELAY_OF_DRAW_FRAME, 200);		//画边框的延时
 		tgmw_set_block_border_switch(&MyCGI, true);			//设置色块需要小边框
 
 		/* 显示框架 */
