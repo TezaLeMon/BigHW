@@ -1355,13 +1355,13 @@ int main(int argc, char** argv)
 	}
 
 	/* 用固定值测试框架 */
-	test_by_fixed();
+	//test_by_fixed();
 
 	/* 用键盘输入值测试框架 */
-	test_by_input();
+	//test_by_input();
 
 	/* 用 color_linez 来测试游戏区域 */
-	test_color_linez();
+	//test_color_linez();
 
 	/* 用 magic_ball 来测试游戏区域 */
 	test_magic_ball();
