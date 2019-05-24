@@ -129,8 +129,8 @@ static void test_by_fixed(void)
 		gmw_set_frame_default_linetype(&MyCGI, 2);			//设置框架线型为预置值2（全部为单线）
  		gmw_set_rowno_switch(&MyCGI, true);					//显示行号
 		gmw_set_colno_switch(&MyCGI, true);					//显示列标
-		tgmw_set_delay(&MyCGI, DELAY_OF_DRAW_FRAME, 200);		//画边框的延时
-		tgmw_set_block_border_switch(&MyCGI, true);			//设置色块需要小边框
+		gmw_set_delay(&MyCGI, DELAY_OF_DRAW_FRAME, 200);		//画边框的延时
+		gmw_set_block_border_switch(&MyCGI, true);			//设置色块需要小边框
 
 		/* 显示框架 */
 		gmw_draw_frame(&MyCGI);

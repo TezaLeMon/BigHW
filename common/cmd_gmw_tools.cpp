@@ -130,6 +130,15 @@ int gmw_set_font(CONSOLE_GRAPHICS_INFO *const pCGI, const char *fontname, const 
 ***************************************************************************/
 int gmw_set_delay(CONSOLE_GRAPHICS_INFO *const pCGI, const int type, const int delay_ms)
 {
+	int dm = delay_ms < 0 ? 0 : delay_ms;
+
+	if (type == DELAY_OF_BLOCK_MOVED)
+		pCGI->delay_of_block_moved = dm;
+	else if (type == DELAY_OF_DRAW_BLOCK)
+		pCGI->delay_of_draw_block = dm;
+	else if (type == DELAY_OF_DRAW_FRAME)
+		pCGI->delay_of_draw_frame = dm;
+
 	return 0; //此句可根据需要修改
 }
 
@@ -357,6 +366,7 @@ int gmw_set_block_linetype(CONSOLE_GRAPHICS_INFO *const pCGI, const char *top_le
 ***************************************************************************/
 int gmw_set_block_border_switch(CONSOLE_GRAPHICS_INFO *const pCGI, const bool on_off)
 {
+	pCGI->CBI.block_border = on_off;
 	return 0; //此句可根据需要修改
 }
 
@@ -588,25 +598,34 @@ int gmw_init(CONSOLE_GRAPHICS_INFO *const pCGI, const int row, const int col, co
 int gmw_draw_frame(const CONSOLE_GRAPHICS_INFO *const pCGI)
 {
 	int i, j;
-	char temp[2 * (CFI_LEN - 1) + 1];
 	setcolor(pCGI->CFI.bgcolor, pCGI->CFI.fgcolor);
 	setconsoleborder(pCGI->cols, pCGI->lines, pCGI->cols, pCGI->lines);
 
+	if (pCGI->draw_frame_with_col_no) {
+		for (j = 0; j < pCGI->col_num; j++)
+			showch(pCGI->start_x + 2 * pCGI->draw_frame_with_col_no + pCGI->CFI.bwidth / 2 + j * pCGI->CFI.bwidth, pCGI->start_y, '0' + j, pCGI->CFI.bgcolor, pCGI->CFI.fgcolor);
+	}
 	//第一行
 	gotoxy(pCGI->start_x + 2 * pCGI->draw_frame_with_col_no, pCGI->start_y + pCGI->top_status_line);
 	cout << pCGI->CFI.top_left;
 	for (j = 1; j < pCGI->col_num; j++) {
-		cout << pCGI->CFI.h_normal;
+		for (int w = 0; w < pCGI->CFI.block_width / 2; w++)
+			cout << pCGI->CFI.h_normal;
 		if (pCGI->CFI.separator)
 			cout << pCGI->CFI.h_top_separator;
 	}
-	cout << pCGI->CFI.h_normal;
+	for (int w = 0; w < pCGI->CFI.block_width / 2; w++)
+		cout << pCGI->CFI.h_normal;
 	cout << pCGI->CFI.top_right;
 	Sleep(pCGI->delay_of_draw_frame);
 	//中间部分
 	for (i = 1; i < pCGI->row_num; i++) {
 		for (int h = 0; h < pCGI->CFI.block_high; h++) {
-			gotoxy(pCGI->start_x + 2 * pCGI->draw_frame_with_col_no, h + (1 + pCGI->CFI.separator) * (i - 1) + 1 + pCGI->start_y + pCGI->top_status_line);
+			if (pCGI->draw_frame_with_row_no&&h == pCGI->CFI.block_high / 2) {
+				for (j = 0; j < pCGI->col_num; j++)
+					showch(pCGI->start_x, pCGI->start_y + pCGI->top_status_line + 1 + h + pCGI->CFI.bhigh * (i - 1), 'A' + i - 1, pCGI->CFI.bgcolor, pCGI->CFI.fgcolor);
+			}
+			gotoxy(pCGI->start_x + 2 * pCGI->draw_frame_with_col_no, h + pCGI->CFI.bhigh * (i - 1) + 1 + pCGI->start_y + pCGI->top_status_line);
 			cout << pCGI->CFI.v_normal;
 			for (j = 1; j < pCGI->col_num; j++) {
 				for (int t = 0; t < pCGI->CFI.block_width; t++)
@@ -617,22 +636,29 @@ int gmw_draw_frame(const CONSOLE_GRAPHICS_INFO *const pCGI)
 			for (int t = 0; t < pCGI->CFI.block_width; t++)
 				cout << " ";
 			cout << pCGI->CFI.v_normal;
+			Sleep(pCGI->delay_of_draw_frame);
 		}
 		if (pCGI->CFI.separator) {
-			gotoxy(pCGI->start_x + 2 * pCGI->draw_frame_with_col_no, pCGI->CFI.block_high + (1 + pCGI->CFI.separator) * (i - 1) + 1 + pCGI->start_y + pCGI->top_status_line);
+			gotoxy(pCGI->start_x + 2 * pCGI->draw_frame_with_col_no, pCGI->CFI.block_high + (pCGI->CFI.bhigh) * (i - 1) + 1 + pCGI->start_y + pCGI->top_status_line);
 			cout << pCGI->CFI.v_left_separator;
 			for (j = 1; j < pCGI->col_num; j++) {
-				cout << pCGI->CFI.h_normal;
+				for (int w = 0; w < pCGI->CFI.block_width / 2; w++)
+					cout << pCGI->CFI.h_normal;
 				cout << pCGI->CFI.mid_separator;
 			}
-			cout << pCGI->CFI.h_normal;
+			for (int w = 0; w < pCGI->CFI.block_width / 2; w++)
+				cout << pCGI->CFI.h_normal;
 			cout << pCGI->CFI.v_right_separator;
 		}
 		Sleep(pCGI->delay_of_draw_frame);
 	}
 	//最后两行
 	for (int h = 0; h < pCGI->CFI.block_high; h++) {
-		gotoxy(pCGI->start_x + 2 * pCGI->draw_frame_with_col_no, h + (1 + pCGI->CFI.separator) * (i - 1) + 1 + pCGI->start_y + pCGI->top_status_line);
+		if (pCGI->draw_frame_with_row_no&&h == pCGI->CFI.block_high / 2) {
+			for (j = 0; j < pCGI->col_num; j++)
+				showch(pCGI->start_x, pCGI->start_y + pCGI->top_status_line + 1 + h + pCGI->CFI.bhigh * (pCGI->row_num - 1), 'A' + i - 1, pCGI->CFI.bgcolor, pCGI->CFI.fgcolor);
+		}
+		gotoxy(pCGI->start_x + 2 * pCGI->draw_frame_with_col_no, h + (pCGI->CFI.bhigh) * (i - 1) + 1 + pCGI->start_y + pCGI->top_status_line);
 		cout << pCGI->CFI.v_normal;
 		for (j = 1; j < pCGI->col_num; j++) {
 			for (int t = 0; t < pCGI->CFI.block_width; t++)
@@ -643,16 +669,20 @@ int gmw_draw_frame(const CONSOLE_GRAPHICS_INFO *const pCGI)
 		for (int t = 0; t < pCGI->CFI.block_width; t++)
 			cout << " ";
 		cout << pCGI->CFI.v_normal;
+		Sleep(pCGI->delay_of_draw_frame);
 	}
-	gotoxy(pCGI->start_x + 2 * pCGI->draw_frame_with_col_no, pCGI->CFI.block_high + (1 + pCGI->CFI.separator) * (i - 1) + 1 + pCGI->start_y + pCGI->top_status_line);
+	gotoxy(pCGI->start_x + 2 * pCGI->draw_frame_with_col_no, pCGI->CFI.block_high + (pCGI->CFI.bhigh) * (i - 1) + 1 + pCGI->start_y + pCGI->top_status_line);
 	cout << pCGI->CFI.lower_left;
 	for (j = 1; j < pCGI->col_num; j++) {
-		cout << pCGI->CFI.h_normal;
+		for (int w = 0; w < pCGI->CFI.block_width / 2; w++)
+			cout << pCGI->CFI.h_normal;
 		if (pCGI->CFI.separator)
 			cout << pCGI->CFI.h_lower_separator;
 	}
-	cout << pCGI->CFI.h_normal;
+	for (int w = 0; w < pCGI->CFI.block_width / 2; w++)
+		cout << pCGI->CFI.h_normal;
 	cout << pCGI->CFI.lower_right;
+	Sleep(pCGI->delay_of_draw_frame);
 	return 0; //此句可根据需要修改
 }
  
@@ -704,6 +734,43 @@ int gmw_status_line(const CONSOLE_GRAPHICS_INFO *const pCGI, const int type, con
 ***************************************************************************/
 int gmw_draw_block(const CONSOLE_GRAPHICS_INFO *const pCGI, const int row_no, const int col_no, const int bdi_value, const BLOCK_DISPLAY_INFO *const bdi)
 {
+	setcolor(bdi->bgcolor, bdi->fgcolor);
+	if (pCGI->CBI.block_border) {
+		//第一行
+		gotoxy(col_no * pCGI->CFI.bwidth + 2 + pCGI->start_x + 2 * pCGI->draw_frame_with_col_no, row_no * pCGI->CFI.bhigh + 1 + pCGI->start_y + pCGI->top_status_line);
+		cout << pCGI->CFI.top_left;
+		for (int w = 0; w < pCGI->CFI.block_width / 2 - 2; w++) {
+			cout << pCGI->CFI.h_normal;
+		}
+		cout << pCGI->CFI.top_right;
+		//中间行
+		for (int h = 1; h < pCGI->CFI.block_high - 1; h++) {
+			gotoxy(col_no * pCGI->CFI.bwidth + 2 + pCGI->start_x + 2 * pCGI->draw_frame_with_col_no, h + row_no * pCGI->CFI.bhigh + 1 + pCGI->start_y + pCGI->top_status_line);
+			cout << pCGI->CFI.v_normal;
+			for (int w = 0; w < pCGI->CFI.block_width / 2 - 2; w++) {
+				cout << "  ";
+			}
+			cout << pCGI->CFI.v_normal;
+		}
+		//最后一行
+		gotoxy(col_no * pCGI->CFI.bwidth + 2 + pCGI->start_x + 2 * pCGI->draw_frame_with_col_no, pCGI->CFI.block_high + row_no * pCGI->CFI.bhigh + pCGI->start_y + pCGI->top_status_line);
+		cout << pCGI->CFI.lower_left;
+		for (int w = 0; w < pCGI->CFI.block_width / 2 - 2; w++) {
+			cout << pCGI->CFI.h_normal;
+		}
+		cout << pCGI->CFI.lower_right;
+	}
+	for (const BLOCK_DISPLAY_INFO* p = bdi; p->value != BDI_VALUE_END; p++)
+		if (p->value == bdi_value) {
+			gotoxy(pCGI->CFI.bwidth / 2 + col_no * pCGI->CFI.bwidth + pCGI->start_x + 2 * pCGI->draw_frame_with_col_no, pCGI->CFI.block_high / 2 + row_no * pCGI->CFI.bhigh + 1 + pCGI->start_y + pCGI->top_status_line);
+			if (p->content)
+				cout << p->content;
+			else
+				cout << p->value;
+			break;
+		}
+
+	Sleep(pCGI->delay_of_draw_block);
 	return 0; //此句可根据需要修改
 }
 
