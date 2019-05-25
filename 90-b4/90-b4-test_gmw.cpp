@@ -987,7 +987,7 @@ static void test_2048(void)
 	gmw_set_rowno_switch(&G2048_CGI, true);						//显示行号
 	gmw_set_colno_switch(&G2048_CGI, true);						//显示列标
 
-	test_step_of_2048(&G2048_CGI);
+	//test_step_of_2048(&G2048_CGI);
 
 	/* 改为无分隔线，再来一次 */
 	gmw_set_font(&G2048_CGI, "Terminal", 16, 8);	//字体
@@ -1355,13 +1355,13 @@ int main(int argc, char** argv)
 	}
 
 	/* 用固定值测试框架 */
-	//test_by_fixed();
+	test_by_fixed();
 
 	/* 用键盘输入值测试框架 */
-	//test_by_input();
+	test_by_input();
 
 	/* 用 color_linez 来测试游戏区域 */
-	//test_color_linez();
+	test_color_linez();
 
 	/* 用 magic_ball 来测试游戏区域 */
 	test_magic_ball();
