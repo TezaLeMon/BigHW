@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include "90-b0.h"
 #include "../common/cmd_console_tools.h"
+#include "../common/cmd_gmw_tools.h"
 void array_create(int arr[MAX_ROW + 2][MAX_COL + 2], const int row, const int col, int n_balls)
 {
 	int i, j;

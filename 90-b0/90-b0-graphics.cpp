@@ -5,6 +5,7 @@
 #include "90-b0.h"
 #include "../common/cmd_console_tools.h"
 #include "../common/common_graphics.h"
+#include "../common/cmd_gmw_tools.h"
 using namespace std;
 
 //type: 1ср 2об 3вС 4ио

@@ -4,6 +4,7 @@
 #include <Windows.h>
 #include "cmd_console_tools.h"
 #include "common_graphics.h"
+#include "../common/cmd_gmw_tools.h"
 using namespace std;
 
 void draw_edge_text(const int row, const int col, const int x_position, const int y_position)

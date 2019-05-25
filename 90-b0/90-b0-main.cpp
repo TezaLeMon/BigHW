@@ -5,6 +5,8 @@
 #include <stdlib.h>
 #include "../common/cmd_console_tools.h"
 #include "../common/common_graphics.h"
+#include "../common/cmd_gmw_tools.h"
+#include "../common/common_data.h"
 #include "90-b0.h"
 using namespace std;
 int menu()
@@ -36,7 +38,7 @@ int menu()
 }
 int main()
 {
-	srand((unsigned)time(0));
+	srand((unsigned)time(NULL));
 	int arr[MAX_ROW + 2][MAX_COL + 2], row, col, ball[3];
 	int path[MAX_ROW + 2][MAX_COL + 2] = { 0 };
 	int ball_conut[8] = { 0 };

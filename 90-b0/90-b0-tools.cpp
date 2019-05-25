@@ -5,6 +5,7 @@
 #include <iomanip>
 #include "90-b0.h"
 #include "../common/cmd_console_tools.h"
+#include "../common/cmd_gmw_tools.h"
 using namespace std;
 
 // ‰»Î ˝æ›
