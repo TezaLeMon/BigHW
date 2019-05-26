@@ -694,7 +694,7 @@ void to_be_continued(const char *prompt)
 {
 	setcolor(); //恢复缺省颜色
 
-	cout << endl;
+	cout << endl << endl;
 	if (prompt)
 		cout << prompt << "，按回车键继续..." << endl;
 	else

@@ -1,5 +1,6 @@
 // 1752762 计1班 魏鹳达
 #include "../common/common_settings.h"
+#include "../common/cmd_gmw_tools.h"
 
 //内部数组生成
 void array_create(int arr[MAX_ROW + 2][MAX_COL + 2], const int row, const int col, int n_balls);
@@ -23,7 +24,7 @@ void path_print_result_text(const int path[MAX_ROW + 2][MAX_COL + 2], const int 
 void path_print_move_text(const int arr[MAX_ROW + 2][MAX_COL + 2], const int path[MAX_ROW + 2][MAX_COL + 2], const int row, const int col);
 
 //图形移动内部数组 移动但未消除返回1 移动且有消除返回2
-int array_print_move_img(int arr[MAX_ROW + 2][MAX_COL + 2], int path[MAX_ROW + 2][MAX_COL + 2], const int row, const int col, int *ball_count = NULL, const int can_keyboard = 0);
+int array_print_move_img(int arr[MAX_ROW + 2][MAX_COL + 2], int path[MAX_ROW + 2][MAX_COL + 2], const int row, const int col, int *ball_count = NULL, const int can_keyboard = 0, CONSOLE_GRAPHICS_INFO *const pCGI = NULL, const BLOCK_DISPLAY_INFO *const bdi = NULL);
 
 
 
@@ -38,4 +39,4 @@ void score_print(const int ball_conut[8]);
 //图形界面 打印彩球情况
 void ball_count_print(const int arr[MAX_ROW + 2][MAX_COL + 2], const int removeball_conut[8], const int row, const int col);
 
-void disp_move_img(const int arr[MAX_ROW + 2][MAX_COL + 2], int path[MAX_ROW + 2][MAX_COL + 2], const int row_from, const int col_from, const int row_to, const int col_to, const int row_ori, const int col_ori);
+void disp_move_img(const int arr[MAX_ROW + 2][MAX_COL + 2], int path[MAX_ROW + 2][MAX_COL + 2], const int row_from, const int col_from, const int row_to, const int col_to, const int row_ori, const int col_ori, const CONSOLE_GRAPHICS_INFO *const pCGI, const BLOCK_DISPLAY_INFO *const bdi);

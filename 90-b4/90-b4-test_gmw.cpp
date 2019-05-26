@@ -11,6 +11,7 @@
 #include "../common/cmd_console_tools.h"
 #include "../common/cmd_gmw_tools.h"
 #include "../common/cmd_tgmw_tools.h"
+#include "90-b4.h"
 using namespace std;
 
 /***************************************************************************
@@ -1374,6 +1375,10 @@ int main(int argc, char** argv)
 
 	/* 用 消灭星星 来测试游戏区域 */
 	test_popstar();
+
+	/* 自己的2048测试 */
+	while (my_2048() == 1)
+		;
 
 	setcolor();
 

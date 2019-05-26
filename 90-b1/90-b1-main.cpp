@@ -8,6 +8,7 @@
 #include "../common/cmd_console_tools.h"
 #include "../common/common_graphics.h"
 #include "../common/common_data.h"
+#include "../common/cmd_gmw_tools.h"
 using namespace std;
 
 int main()
@@ -26,7 +27,10 @@ int main()
 							"从文件中读取数据以验证查找消除提示的算法的正确性",
 							"退出" };
 	char t_menu;
+
 	while (1){
+		setconsoleborder(80, 25, 80, 1000);
+		setfontsize("Terminal", 16, 8);
 		t_menu = menu(serial_number, prompt);
 		if (t_menu == serial_number[strlen(serial_number) - 1])
 			break;

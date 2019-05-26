@@ -44,11 +44,11 @@ int gmw_set_rowcol(CONSOLE_GRAPHICS_INFO *const pCGI, const int row, const int c
 	//整个cmd窗口大小
 	//为了给中文输入法提示行及运行结束的提示信息留空间，要求在计算得到的结果基础上
 	//（上额外空间+上状态栏+列标显示+主区域+下状态栏）+ 4（1中文输入法提示行+3预留空行）
-	pCGI->lines = pCGI->CFI.block_high * pCGI->row_num + 2 + pCGI->CFI.separator*(pCGI->row_num - 1) + pCGI->extern_up_lines + pCGI->extern_down_lines + pCGI->draw_frame_with_row_no + pCGI->top_status_line + pCGI->lower_status_line + 4;
-	pCGI->cols = pCGI->CFI.block_width * pCGI->col_num + 2 * (2 + pCGI->CFI.separator*(pCGI->col_num - 1)) + pCGI->extern_left_cols + pCGI->extern_right_cols + pCGI->draw_frame_with_col_no * 2 + 1;
+	pCGI->lines = pCGI->CFI.block_high * pCGI->row_num + 2 + pCGI->CFI.separator*(pCGI->row_num - 1) + pCGI->extern_up_lines + pCGI->extern_down_lines + pCGI->draw_frame_with_col_no + pCGI->top_status_line + pCGI->lower_status_line + 4;
+	pCGI->cols = pCGI->CFI.block_width * pCGI->col_num + 2 * (2 + pCGI->CFI.separator*(pCGI->col_num - 1)) + pCGI->extern_left_cols + pCGI->extern_right_cols + pCGI->draw_frame_with_row_no * 2 + 1;
 
 	//下状态栏位置
-	pCGI->SLI.lower_start_y = pCGI->start_y + pCGI->CFI.block_high * pCGI->row_num + 2 + pCGI->CFI.separator*(pCGI->row_num - 1) + pCGI->top_status_line + pCGI->draw_frame_with_row_no;
+	pCGI->SLI.lower_start_y = pCGI->start_y + pCGI->CFI.block_high * pCGI->row_num + 2 + pCGI->CFI.separator*(pCGI->row_num - 1) + pCGI->top_status_line + pCGI->extern_up_lines + pCGI->draw_frame_with_col_no;
 	//下状态栏宽度
 	pCGI->SLI.width = pCGI->CFI.block_width * pCGI->col_num + 2 * (2 + pCGI->CFI.separator*(pCGI->col_num - 1)) + pCGI->draw_frame_with_col_no * 2;
 
@@ -170,14 +170,14 @@ int gmw_set_ext_rowcol(CONSOLE_GRAPHICS_INFO *const pCGI, const int up_lines, co
 	pCGI->SLI.top_start_x = pCGI->start_x;
 	pCGI->SLI.top_start_y = pCGI->start_y;
 	pCGI->SLI.lower_start_x = pCGI->start_x;
-	pCGI->SLI.lower_start_y = pCGI->start_y + pCGI->CFI.block_high * pCGI->row_num + 2 + pCGI->CFI.separator*(pCGI->row_num - 1) + pCGI->top_status_line + pCGI->draw_frame_with_row_no;
+	pCGI->SLI.lower_start_y = pCGI->start_y + pCGI->CFI.block_high * pCGI->row_num + 2 + pCGI->CFI.separator*(pCGI->row_num - 1) + pCGI->top_status_line + pCGI->extern_up_lines + pCGI->draw_frame_with_col_no;
 	pCGI->SLI.width = pCGI->CFI.block_width * pCGI->col_num + 2 * (2 + pCGI->CFI.separator*(pCGI->col_num - 1)) + pCGI->draw_frame_with_col_no * 2;
 
 	//整个cmd窗口大小
 	//为了给中文输入法提示行及运行结束的提示信息留空间，要求在计算得到的结果基础上
 	//（上额外空间+上状态栏+列标显示+主区域+下状态栏）+ 4（1中文输入法提示行+3预留空行）
-	pCGI->lines = pCGI->CFI.block_high * pCGI->row_num + (2 + pCGI->CFI.separator*(pCGI->row_num - 1)) + pCGI->extern_up_lines + pCGI->extern_down_lines + pCGI->draw_frame_with_row_no + pCGI->top_status_line + pCGI->lower_status_line + 4;
-	pCGI->cols = pCGI->CFI.block_width * pCGI->col_num + 2 * (2 + pCGI->CFI.separator*(pCGI->col_num - 1)) + pCGI->extern_left_cols + pCGI->extern_right_cols + pCGI->draw_frame_with_col_no * 2 + 1;
+	pCGI->lines = pCGI->CFI.block_high * pCGI->row_num + (2 + pCGI->CFI.separator*(pCGI->row_num - 1)) + pCGI->extern_up_lines + pCGI->extern_down_lines + pCGI->draw_frame_with_col_no + pCGI->top_status_line + pCGI->lower_status_line + 4;
+	pCGI->cols = pCGI->CFI.block_width * pCGI->col_num + 2 * (2 + pCGI->CFI.separator*(pCGI->col_num - 1)) + pCGI->extern_left_cols + pCGI->extern_right_cols + pCGI->draw_frame_with_row_no * 2 + 1;
 
 	return 0; //此句可根据需要修改
 }
@@ -358,14 +358,14 @@ int gmw_set_frame_style(CONSOLE_GRAPHICS_INFO *const pCGI, const int block_width
 	pCGI->CFI.bhigh = pCGI->CFI.block_high + pCGI->CFI.separator;
 
 	//状态栏部分
-	pCGI->SLI.lower_start_y = pCGI->start_y + pCGI->CFI.block_high * pCGI->row_num + 2 + pCGI->CFI.separator*(pCGI->row_num - 1) + pCGI->top_status_line;
+	pCGI->SLI.lower_start_y = pCGI->start_y + pCGI->CFI.block_high * pCGI->row_num + 2 + pCGI->CFI.separator*(pCGI->row_num - 1) + pCGI->top_status_line + pCGI->extern_up_lines + pCGI->draw_frame_with_col_no;
 	pCGI->SLI.width = pCGI->CFI.block_width * pCGI->col_num + 2 * (2 + pCGI->CFI.separator*(pCGI->col_num - 1));
 
 	//整个cmd窗口大小
 	//为了给中文输入法提示行及运行结束的提示信息留空间，要求在计算得到的结果基础上
 	//（上额外空间+上状态栏+列标显示+主区域+下状态栏）+ 4（1中文输入法提示行+3预留空行）
-	pCGI->lines = pCGI->CFI.block_high * pCGI->row_num + 2 + pCGI->CFI.separator*(pCGI->row_num - 1) + pCGI->extern_up_lines + pCGI->extern_down_lines + pCGI->draw_frame_with_row_no + pCGI->top_status_line + pCGI->lower_status_line + 4;
-	pCGI->cols = pCGI->CFI.block_width * pCGI->col_num + 2 * (2 + pCGI->CFI.separator*(pCGI->col_num - 1)) + pCGI->extern_left_cols + pCGI->extern_right_cols + pCGI->draw_frame_with_col_no * 2 + 1;
+	pCGI->lines = pCGI->CFI.block_high * pCGI->row_num + 2 + pCGI->CFI.separator*(pCGI->row_num - 1) + pCGI->extern_up_lines + pCGI->extern_down_lines + pCGI->draw_frame_with_col_no + pCGI->top_status_line + pCGI->lower_status_line + 4;
+	pCGI->cols = pCGI->CFI.block_width * pCGI->col_num + 2 * (2 + pCGI->CFI.separator*(pCGI->col_num - 1)) + pCGI->extern_left_cols + pCGI->extern_right_cols + pCGI->draw_frame_with_row_no * 2 + 1;
 
 	return 0; //此句可根据需要修改
 }
@@ -590,7 +590,7 @@ int gmw_set_colno_switch(CONSOLE_GRAPHICS_INFO *const pCGI, const bool on_off)
 {
 	pCGI->draw_frame_with_col_no = on_off;
 
-	pCGI->SLI.lower_start_y = pCGI->start_y + pCGI->draw_frame_with_col_no + pCGI->CFI.block_high * pCGI->row_num + 2 + pCGI->CFI.separator*(pCGI->row_num - 1) + pCGI->top_status_line;
+	pCGI->SLI.lower_start_y = pCGI->start_y + pCGI->CFI.block_high * pCGI->row_num + 2 + pCGI->CFI.separator*(pCGI->row_num - 1) + pCGI->top_status_line + pCGI->extern_up_lines + pCGI->draw_frame_with_col_no;
 
 	pCGI->lines = pCGI->CFI.block_high * pCGI->row_num + 2 + pCGI->CFI.separator*(pCGI->row_num - 1) + pCGI->extern_up_lines + pCGI->extern_down_lines + pCGI->draw_frame_with_col_no + pCGI->top_status_line + pCGI->lower_status_line + 4;
 
@@ -752,7 +752,6 @@ int gmw_draw_frame(const CONSOLE_GRAPHICS_INFO *const pCGI)
 	setconsoleborder(pCGI->cols, pCGI->lines, pCGI->cols, pCGI->lines);
 	setcolor(pCGI->area_bgcolor, pCGI->area_fgcolor);
 	cls();
-	setcolor(pCGI->CFI.bgcolor, pCGI->CFI.fgcolor);
 
 	if (pCGI->draw_frame_with_col_no) {
 		setcolor(pCGI->area_bgcolor, pCGI->area_fgcolor);
@@ -766,6 +765,7 @@ int gmw_draw_frame(const CONSOLE_GRAPHICS_INFO *const pCGI)
 		}
 	}
 	//第一行
+	setcolor(pCGI->CFI.bgcolor, pCGI->CFI.fgcolor);
 	gotoxy(pCGI->start_x + 2 * pCGI->draw_frame_with_row_no, pCGI->start_y + pCGI->top_status_line + pCGI->draw_frame_with_col_no);
 	cout << pCGI->CFI.top_left;
 	for (j = 1; j < pCGI->col_num; j++) {
@@ -779,10 +779,12 @@ int gmw_draw_frame(const CONSOLE_GRAPHICS_INFO *const pCGI)
 	cout << pCGI->CFI.top_right;
 	Sleep(pCGI->delay_of_draw_frame);
 	//中间部分
+	setcolor(pCGI->CFI.bgcolor, pCGI->CFI.fgcolor);
 	for (i = 1; i < pCGI->row_num; i++) {
 		for (int h = 0; h < pCGI->CFI.block_high; h++) {
 			if (pCGI->draw_frame_with_row_no&&h == (pCGI->CFI.block_high - 1) / 2) {
 				char ch = i - 1 > 'Z' - 'A' ? '*' : 'A' + i - 1;
+				setcolor(pCGI->area_bgcolor, pCGI->area_fgcolor);
 				showch(pCGI->start_x, h + pCGI->CFI.bhigh * (i - 1) + 1 + pCGI->start_y + pCGI->top_status_line + pCGI->draw_frame_with_col_no, ch, pCGI->area_bgcolor, pCGI->area_fgcolor);
 				setcolor(pCGI->CFI.bgcolor, pCGI->CFI.fgcolor);
 			}
@@ -1175,13 +1177,17 @@ int gmw_read_keyboard_and_mouse(const CONSOLE_GRAPHICS_INFO *const pCGI, int &MA
 				|| (Y - (1 + pCGI->start_y + pCGI->top_status_line + pCGI->draw_frame_with_col_no)) % pCGI->CFI.bhigh >= pCGI->CFI.block_high
 				|| (X - (2 + pCGI->start_x + 2 * pCGI->draw_frame_with_col_no)) % pCGI->CFI.bwidth >= pCGI->CFI.block_width	//在边框上
 				|| MRow < 0 || MRow >= pCGI->row_num || MCol < 0 || MCol >= pCGI->col_num) {	//超出范围
-				sprintf(temp, "[当前光标] 位置非法");
-				gmw_status_line(pCGI, LOWER_STATUS_LINE, temp);
+				if (update_lower_status_line) {
+					sprintf(temp, "[当前光标] 位置非法");
+					gmw_status_line(pCGI, LOWER_STATUS_LINE, temp);
+				}
 				continue;
 			}
 			else {
-				sprintf(temp, "[当前光标] %c行 %d列 ", 'A' + MRow, MCol);
-				gmw_status_line(pCGI, LOWER_STATUS_LINE, temp);
+				if (update_lower_status_line) {
+					sprintf(temp, "[当前光标] %c行 %d列 ", 'A' + MRow, MCol);
+					gmw_status_line(pCGI, LOWER_STATUS_LINE, temp);
+				}
 				switch (MAction) {
 					case MOUSE_LEFT_BUTTON_CLICK:			//按下左键
 						return CCT_MOUSE_EVENT;
