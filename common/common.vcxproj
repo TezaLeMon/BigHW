@@ -121,16 +121,20 @@
     <ClCompile Include="common_graphics.cpp" />
     <ClCompile Include="common_data.cpp" />
     <ClCompile Include="common_settings.h" />
+    <ClCompile Include="md5.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cmd_console_tools.h" />
     <ClInclude Include="cmd_gmw_tools.h" />
     <ClInclude Include="cmd_hdc_tools.h" />
+    <ClInclude Include="cmd_net_tools.h" />
     <ClInclude Include="cmd_tgmw_tools.h" />
     <ClInclude Include="common_graphics.h" />
     <ClInclude Include="common_data.h" />
+    <ClInclude Include="md5.h" />
   </ItemGroup>
   <ItemGroup>
+    <Library Include="cmd_net_tools.lib" />
     <Library Include="cmd_tgmw_tools.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

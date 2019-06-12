@@ -1,4 +1,4 @@
-/* 学号 姓名 班级 */
+// 1752762 计1班 魏鹳达
 #pragma once
 #include <iostream>
 #include "cmd_console_tools.h"

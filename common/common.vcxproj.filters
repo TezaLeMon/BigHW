@@ -33,6 +33,9 @@
     <ClCompile Include="cmd_gmw_tools.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
+    <ClCompile Include="md5.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cmd_console_tools.h">
@@ -53,9 +56,18 @@
     <ClInclude Include="cmd_tgmw_tools.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="cmd_net_tools.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="md5.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Library Include="cmd_tgmw_tools.lib">
+      <Filter>资源文件</Filter>
+    </Library>
+    <Library Include="cmd_net_tools.lib">
       <Filter>资源文件</Filter>
     </Library>
   </ItemGroup>
