@@ -11,20 +11,20 @@ using namespace std;
   函数名称：
   功    能：将学号+MD5(password)再用security_str按位异或后形成要发送的“报道”数据
   输入参数：char *reg_str				：异或后需要发送的串（返回）
-            const char *stu_no			：学号
+			const char *stu_no			：学号
 			const char *stu_password	：交作业系统中的口令（明码），无论口令多长，转换为MD5后为32字节的hex串
 			const char *security_str	：从Server端收到的异或加密串
   返 回 值：
   说    明：以学号 : 1859999 , 密码 : Password，异或串 : f272a9b7422ee1ddec6c4b1abe758cadefc658c2 为例
-            1、Password     ： => MD5 => “dc647eb65e6711e155375218212b3964”
+			1、Password     ： => MD5 => “dc647eb65e6711e155375218212b3964”
 			2、认证串(原始) ：1859999+dc647eb65e6711e155375218212b3964
 			3、认证串(原始)和异或串进行按位异或
-			       1859999+dc647eb65e6711e155375218212b3964
-			       f272a9b7422ee1ddec6c4b1abe758cadefc658c2
+				   1859999+dc647eb65e6711e155375218212b3964
+				   f272a9b7422ee1ddec6c4b1abe758cadefc658c2
 			   进行按位异或，结果不保证一定是图形ASCII字符，所以再转为hex
-               认证串(Hex发送) ：570a020b58005b1c50510451525406525006005405535450575004020d51505c5757515406015506
+			   认证串(Hex发送) ：570a020b58005b1c50510451525406525006005405535450575004020d51505c5757515406015506
 			   解释：第1个字节 1和f，即 0x31^0x66 = 0x57
-			         第2个字节 8和2，即 0x38^0x32 = 0x0a
+					 第2个字节 8和2，即 0x38^0x32 = 0x0a
 					 ...(略)
 ***************************************************************************/
 int cmd_tcp_socket::make_register_string(char *send_regstr, const char *stu_no, const char *stu_password, const char *security_str)
@@ -35,7 +35,7 @@ int cmd_tcp_socket::make_register_string(char *send_regstr, const char *stu_no, 
 
 	char ori_regstr[41];
 	strcpy(ori_regstr, stu_no);
-	strcat(ori_regstr, "+");
+	strcat(ori_regstr, "-");
 	strcat(ori_regstr, MD5_stu_password);	//得到原始认证串
 
 	for (int i = 0; i < 40; i++)	//长度固定为40位 "学号+32加密串"
@@ -75,8 +75,11 @@ int game_progress(cmd_tcp_socket &client)
 		if (!recv_startgame)
 			return -1;
 
-		if (spack == "GameOver")
+		if (spack == "GameOver") {
+			cout << "本次GameID : " << client.get_gameid() << endl;
+			cout << "本次得分   : " << client.get_score() << endl;
 			return 0;
+		}
 
 		cout << "1.传送一个坐标" << endl;
 		cout << "2.传送整架飞机坐标" << endl;
@@ -112,7 +115,7 @@ int game_progress(cmd_tcp_socket &client)
   函数名称：
   功    能：
   输入参数：argv[1] : "-auto"/"-manual"，表示自动/人工游戏
-            argv[2] : 学号
+			argv[2] : 学号
 			argv[3] : 密码
   返 回 值：
   说    明：
@@ -142,7 +145,7 @@ int main(int argc, char **argv)
 	/* 打开client类对象中的debug开关（调试时可打开，到图形界面时需关闭） */
 	client.set_debug_switch(true);
 
-	while(1)  {
+	while (1) {
 		if (!first) { //出任何错误，延时5秒重连（不包括第一次）
 			cout << "与服务器的连接断开!" << endl;
 			Sleep(sleep_ms);
@@ -172,7 +175,7 @@ int main(int argc, char **argv)
 		   2、make_register_string需要自己实现
 		   3、可参考tmake_register_string，测试时会将此函数从lib中移除   */
 		char reg_str[81];
-//		client.tmake_register_string(reg_str, "1850000", "185-0*0%0@0", s1.c_str()); //预置的测试用户
+		//		client.tmake_register_string(reg_str, "1850000", "185-0*0%0@0", s1.c_str()); //预置的测试用户（已失效）
 		client.make_register_string(reg_str, argv[2], argv[3], s1.c_str()); //传自己的学号和密码
 
 		/* 将认证串发送过去 */

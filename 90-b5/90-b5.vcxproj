@@ -118,12 +118,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\common\cmd_console_tools.cpp" />
+    <ClCompile Include="..\common\cmd_gmw_tools.cpp" />
     <ClCompile Include="..\common\md5.cpp" />
-    <ClCompile Include="90-b5-test.cpp" />
+    <ClCompile Include="90-b5-hit_plane.cpp" />
+    <ClCompile Include="90-b5-test.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\common\cmd_console_tools.h" />
+    <ClInclude Include="..\common\cmd_gmw_tools.h" />
     <ClInclude Include="..\common\cmd_net_tools.h" />
     <ClInclude Include="..\common\md5.h" />
+    <ClInclude Include="90-b5-hit_plane.h" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\common\cmd_net_tools.lib" />
