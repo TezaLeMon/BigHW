@@ -8,8 +8,10 @@
 #include <conio.h>  
 #include <math.h>
 #include <time.h>
+#include <string>
 #include "../common/cmd_console_tools.h"
 #include "../common/cmd_gmw_tools.h"
+#include "../common/cmd_net_tools.h"
 #include "90-b5-hit_plane.h"
 using namespace std;
 
@@ -66,10 +68,10 @@ static void to_be_continued(const char *game_name, const char *prompt, const CON
   函数名称：
   功    能：
   输入参数：
-  返 回 值：1 - 重玩	0 - 退出
+  返 回 值：1 - 重玩	0 - 退出	-1 - 非法情况退出
   说    明：手动游戏模式
 ***************************************************************************/
-int play_game_manual() {
+int play_game_manual(cmd_tcp_socket &client) {
 	CONSOLE_GRAPHICS_INFO Ghitplane_CGI;	//声明一个CGI变量
 	const BLOCK_DISPLAY_INFO bdi_normal[] = {
 	{ BDI_VALUE_BLANK, -1, -1, NULL },	//0不显示，用空格填充即可
@@ -102,6 +104,11 @@ int play_game_manual() {
 	gmw_draw_frame(&Ghitplane_CGI);
 
 	//	游戏部分
+	char sel;
+	char row, head_row, tail_row;
+	int col, head_col, tail_col;
+	bool recv_startgame = false;
+
 	int loop = 1;
 	int maction, mrow, mcol;
 	int keycode1, keycode2;
@@ -110,6 +117,23 @@ int play_game_manual() {
 
 	while (1)
 	{
+		string spack;
+		if (client.get_gameprogress_string(spack) < 0) {
+			return -1;
+		}
+		if (spack == "StartGame")
+			recv_startgame = true;
+
+		/* 没收到StartGame前所有其他信息均认为错误 */
+		if (!recv_startgame)
+			return -1;
+
+		if (spack == "GameOver") {	//游戏结束
+			cout << "本次GameID : " << client.get_gameid() << endl;
+			cout << "本次得分   : " << client.get_score() << endl;
+			return 0;
+		}
+
 		/* 上状态栏显示内容 */
 		sprintf(temp, "当前分数：%d （R：重玩 Q：退出）", score);
 		gmw_status_line(&Ghitplane_CGI, TOP_STATUS_LINE, temp);

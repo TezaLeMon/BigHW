@@ -121,9 +121,11 @@
     <ClCompile Include="..\common\cmd_console_tools.cpp" />
     <ClCompile Include="..\common\cmd_gmw_tools.cpp" />
     <ClCompile Include="..\common\md5.cpp" />
-    <ClCompile Include="90-b5-hit_plane.cpp" />
-    <ClCompile Include="90-b5-test.cpp">
+    <ClCompile Include="90-b5-hit_plane.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="90-b5-test.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">false</ExcludedFromBuild>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

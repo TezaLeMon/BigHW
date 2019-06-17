@@ -111,6 +111,26 @@ int game_progress(cmd_tcp_socket &client)
 	}//end of while(1)
 }
 
+
+/***************************************************************************
+  函数名称：
+  功    能：
+  输入参数：
+  返 回 值：1 - 合法，	0 - 非法
+  说    明：检查参数合理性
+***************************************************************************/
+int check(char **argv)
+{
+	if (strcmp(argv[1], "-auto") != 0 && strcmp(argv[1], "-manual") != 0)	//argv[1]除 -auto -manual 外均错误
+		return 0;
+
+	if (strlen(argv[2]) != 7)	//学号7位
+		return 0;
+
+	return 1;
+		
+}
+
 /***************************************************************************
   函数名称：
   功    能：
@@ -127,23 +147,25 @@ int main(int argc, char **argv)
 		return -1;
 	}
 
-	/* 给个明确提示的demo */
-	if (strcmp(argv[1], "-auto") == 0) {
-		cout << "Demo中未实现自动游戏" << endl;
-		return -1;
-	}
-
 	/* 其余合理性检查未做，需要自己补
 	   1、argv[1]除 -auto -manual 外均错误
 	   2、学号7位
 	   3、... */
+	if (!check(argv))
+		return -1;
+
+	/* auto自动游戏未实现 */
+	if (strcmp(argv[1], "-auto") == 0) {
+		cout << "未实现自动游戏" << endl;
+		return -1;
+	}
 
 	const int sleep_ms = 5000;
 	bool first = true;
 	cmd_tcp_socket client;
 
 	/* 打开client类对象中的debug开关（调试时可打开，到图形界面时需关闭） */
-	client.set_debug_switch(true);
+	client.set_debug_switch(false);
 
 	while (1) {
 		if (!first) { //出任何错误，延时5秒重连（不包括第一次）
